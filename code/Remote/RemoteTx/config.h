@@ -1,45 +1,38 @@
 // Debug
-bool enable_serial_print = false;
+bool enable_serial_print = true;
 
-// // MCP23S17T
-// // #define MCP23X17_addr1 0x25
-// // #define MCP23X17_addr2 0x26
+// Switch Button
+#define button_switch_1 8
+#define button_switch_2 9
+#define button_switch_3 10
+#define button_switch_4 11
+#define button_switch_5 12
 
-// // // ads1115
-// // #define ADS1115_addr1 0x48
+// Pot Switch Button
+#define button_switch_pot_1 0
+#define button_switch_pot_2 1
+#define button_switch_pot_3 2
+#define button_switch_pot_4 3
+#define button_switch_pot_5 4
+#define button_switch_pot_6 5
 
-// // //Switch Button
-// // #define buttonSwitch_1 15
-// // #define buttonSwitch_2 14
-// // #define buttonSwitch_3 13
-// // #define buttonSwitch_4 12
-// // #define buttonSwitch_5 11
+// ANO Rotary Encoder 1
+#define rotary_encoder_1_left   9
+#define rotary_encoder_1_up     10
+#define rotary_encoder_1_right  11
+#define rotary_encoder_1_down   12
+#define rotary_encoder_1_center 13
+#define rotary_encoder_1_enc_a  15
+#define rotary_encoder_1_enc_b  14
 
-// // //Pot Switch Button
-// // #define buttonSwitchPot_1 3
-// // #define buttonSwitchPot_2 2
-// // #define buttonSwitchPot_3 1
-// // #define buttonSwitchPot_4 0
-// // #define buttonSwitchPot_5 4
-// // #define buttonSwitchPot_6 5
-
-// // //Rotary 1 Buttons
-// // #define rotary1_1 11
-// // #define rotary1_2 12
-// // #define rotary1_3 13
-// // #define rotary1_4 14
-// // #define rotary1_5 15
-// // #define rotary1_enc_1 9
-// // #define rotary1_enc_2 10
-
-// // //Rotary 2 Buttons
-// // #define rotary2_1 0
-// // #define rotary2_2 1
-// // #define rotary2_3 2
-// // #define rotary2_4 3
-// // #define rotary2_5 4
-// // #define rotary2_enc_1 6
-// // #define rotary2_enc_2 5
+//ANO Rotary Encoder 2
+#define rotary_encoder_2_left   1
+#define rotary_encoder_2_up     2
+#define rotary_encoder_2_right  3
+#define rotary_encoder_2_down   4
+#define rotary_encoder_2_center 5
+#define rotary_encoder_2_enc_a  7
+#define rotary_encoder_2_enc_b  6
 
 /**
  * Potentiometers
@@ -60,6 +53,11 @@ int pot_out_max = 255;
 /**
  * Joysticks
  */
+#define LEFT_JOYSTICK_X  0
+#define LEFT_JOYSTICK_Y  1
+#define RIGHT_JOYSTICK_X 2
+#define RIGHT_JOYSTICK_Y 3
+
 int
     // General values
     joystick_drift_value = 10,

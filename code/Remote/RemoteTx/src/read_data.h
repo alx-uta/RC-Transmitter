@@ -10,10 +10,10 @@
  * Read the data for the joysticks
  */
 void readJoysticks() {
-  joystick_x1 = joystick->readADC(0); // x left
-  joystick_y1 = joystick->readADC(1); // y left
-  joystick_x2 = joystick->readADC(2); // x right
-  joystick_y2 = joystick->readADC(3); // y right
+  joystick_x1 = joystick->readADC(LEFT_JOYSTICK_X); // x left
+  joystick_y1 = joystick->readADC(LEFT_JOYSTICK_Y); // y left
+  joystick_x2 = joystick->readADC(RIGHT_JOYSTICK_X); // x right
+  joystick_y2 = joystick->readADC(RIGHT_JOYSTICK_Y); // y right
 
   // Left joystick
   joystick_x1_map = joystickMap(
@@ -73,9 +73,6 @@ void readJoysticks() {
   payload.structure.j2y = (
     joystick_y2 > right_joystick_middle_value_y + joystick_drift_value || joystick_y2 < right_joystick_middle_value_y - joystick_drift_value
   ) ? joystick_y2_map : joystick_default_value;
-
- Serial.println(payload.structure.j1x);
-
 }
 
 /**
@@ -107,72 +104,83 @@ void readPotentiometers() {
   payload.structure.p6 = map(pot6LastValue, pot_min, pot_max, pot_min, pot_out_max);
 }
 
-// void potentiometersSetData() {
+/**
+ * Rotary Encoders
+ */
+void readRotaryEncoders() {
+  int left_encoder_direction  = 0;
+  int right_encoder_direction = 0;
+  payload.structure.re1_dir = 0;
+  payload.structure.re2_dir = 0;
 
+  // Get the direction and current position
 
+  // Left
+  left_encoder->tick(
+    true,
+    MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_1_enc_b),
+    MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_1_enc_a)
+  );
+  int left_encoder_new_pos = left_encoder->getPosition();
 
-//   /*
-//     Potentiometer Switches
-//   */
-//   payload.structure.p1s = !mcp2.digitalRead(buttonSwitchPot_1);
-//   payload.structure.p2s = !mcp2.digitalRead(buttonSwitchPot_2);
-//   payload.structure.p3s = !mcp2.digitalRead(buttonSwitchPot_3);
-//   payload.structure.p4s = !mcp2.digitalRead(buttonSwitchPot_4);
-//   payload.structure.p5s = !mcp2.digitalRead(buttonSwitchPot_5);
-//   payload.structure.p6s = !mcp2.digitalRead(buttonSwitchPot_6);
-// }
+  if (left_encoder_pos != left_encoder_new_pos) {
+    left_encoder_pos = left_encoder_new_pos;
+    left_encoder_direction = (int)left_encoder->getDirection();
+  }
 
-// void switchesSetData() {
-//   payload.structure.s1 = mcp1.digitalRead(buttonSwitch_1);
-//   payload.structure.s2 = mcp1.digitalRead(buttonSwitch_2);
-//   payload.structure.s3 = mcp1.digitalRead(buttonSwitch_3);
-//   payload.structure.s4 = mcp1.digitalRead(buttonSwitch_4);
-//   payload.structure.s5 = mcp1.digitalRead(buttonSwitch_5);
-// }
+  // Right
+  right_encoder->tick(
+    true,
+    MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_2_enc_b),
+    MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_2_enc_a)
+  );
+  int right_encoder_new_pos = right_encoder->getPosition();
 
-// void anoRotaryEncoder2SetData() {
-//   int encoder_direction = 0;
+  if (right_encoder_pos != right_encoder_new_pos) {
+    right_encoder_pos = right_encoder_new_pos;
+    right_encoder_direction = (int)right_encoder->getDirection();
+  }
 
-//   payload.structure.re2_up      = !mcp1.digitalRead(rotary2_2);
-//   payload.structure.re2_down    = !mcp1.digitalRead(rotary2_4);
-//   payload.structure.re2_left    = !mcp1.digitalRead(rotary2_3);
-//   payload.structure.re2_right   = !mcp1.digitalRead(rotary2_5);
-//   payload.structure.re2_center  = !mcp1.digitalRead(rotary2_1);
+  // Left
+  payload.structure.re1_dir     = left_encoder_direction;
+  payload.structure.re1_pos     = left_encoder_new_pos;
+  payload.structure.re1_left    = MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_1_left);
+  payload.structure.re1_up      = MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_1_up);
+  payload.structure.re1_right   = MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_1_right);
+  payload.structure.re1_down    = MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_1_down);
+  payload.structure.re1_center  = MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_1_center);
 
-//   encoder2->tick(
-//     mcp1.digitalRead(rotary2_enc_1),
-//     mcp1.digitalRead(rotary2_enc_2)
-//   );
+  // Right
+  payload.structure.re2_dir     = right_encoder_direction;
+  payload.structure.re2_pos     = right_encoder_new_pos;
+  payload.structure.re2_left    = MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_2_left);
+  payload.structure.re2_up      = MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_2_up);
+  payload.structure.re2_right   = MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_2_right);
+  payload.structure.re2_down    = MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_2_down);
+  payload.structure.re2_center  = MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_2_center);
+}
 
-//   int newPos = encoder2->getPosition();
+/**
+ * Switches
+ */
 
-//   payload.structure.re2_dir = 0;
-//   if (pos != newPos) {
-//     pos = newPos;
-//     encoder_direction = (int)encoder2->getDirection();
-//   }
-//   payload.structure.re2_dir = encoder_direction;
-// }
+void readSwitches() {
+  /**
+   * Potentiometer Switch Button
+   */
+  payload.structure.p1s = MCP23S17T_SWITCHES.digitalRead(button_switch_pot_1);
+  payload.structure.p2s = MCP23S17T_SWITCHES.digitalRead(button_switch_pot_2);
+  payload.structure.p3s = MCP23S17T_SWITCHES.digitalRead(button_switch_pot_3);
+  payload.structure.p4s = MCP23S17T_SWITCHES.digitalRead(button_switch_pot_4);
+  payload.structure.p5s = MCP23S17T_SWITCHES.digitalRead(button_switch_pot_5);
+  payload.structure.p6s = MCP23S17T_SWITCHES.digitalRead(button_switch_pot_6);
 
-// void anoRotaryEncoder1SetData() {
-//   int encoder_direction = 0;
-
-//   encoder1->tick(
-//     mcp2.digitalRead(rotary1_enc_1),
-//     mcp2.digitalRead(rotary1_enc_2)
-//   );
-//   int newPos = encoder1->getPosition();
-
-//   payload.structure.re1_dir = 0;
-//   if (pos != newPos) {
-//     pos = newPos;
-//     encoder_direction = (int)encoder1->getDirection();
-//   }
-  
-//   payload.structure.re1_dir     = encoder_direction;
-//   payload.structure.re1_up      = !mcp2.digitalRead(rotary1_4);
-//   payload.structure.re1_down    = !mcp2.digitalRead(rotary1_2);
-//   payload.structure.re1_left    = !mcp2.digitalRead(rotary1_3);
-//   payload.structure.re1_right   = !mcp2.digitalRead(rotary1_1);
-//   payload.structure.re1_center  = !mcp2.digitalRead(rotary1_5);
-// }
+  /**
+   * Switch Button
+   */
+  payload.structure.s1 = MCP23S17T_SWITCHES.digitalRead(button_switch_1);
+  payload.structure.s2 = MCP23S17T_SWITCHES.digitalRead(button_switch_2);
+  payload.structure.s3 = MCP23S17T_SWITCHES.digitalRead(button_switch_3);
+  payload.structure.s4 = MCP23S17T_SWITCHES.digitalRead(button_switch_4);
+  payload.structure.s5 = MCP23S17T_SWITCHES.digitalRead(button_switch_5);
+}

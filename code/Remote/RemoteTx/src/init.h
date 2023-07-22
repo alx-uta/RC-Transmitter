@@ -6,20 +6,13 @@
 #define MOSI_PIN  13
 
 /**
- * CS Pinout
- */
-#define MCP3208_CS_PIN_0 25     // Potentiometers
-#define MCP3208_CS_PIN_1 27     // Joysticks
-
-#define MCP23S17T_CS_PIN_0  22  // Switches
-#define MCP23S17T_CS_PIN_1  4   // Rotary Encoders
-
-/**
  * MCP3208 Init
  * 
  * This is used for reading the data 
  * from the Joysticks and Potentiometers
  */
+// Potentiometers
+#define MCP3208_CS_PIN_0 25
 MCP3208 * potentiometer;
 MCP3208 MCP3208_CHIP_0(
     SCK_PIN,
@@ -28,6 +21,8 @@ MCP3208 MCP3208_CHIP_0(
     MCP3208_CS_PIN_0
 );
 
+// Joysticks
+#define MCP3208_CS_PIN_1 27
 MCP3208 * joystick;
 MCP3208 MCP3208_CHIP_1(
     SCK_PIN,
@@ -45,19 +40,22 @@ MCP3208 MCP3208_CHIP_1(
  * 
  */
 
-// Address for the Switches
+// CS PIN and Address for the Switches
+#define MCP23S17T_CS_PIN_0  22
 #define MCP23S17T_ADDR_0    0x24
 Adafruit_MCP23X17 MCP23S17T_SWITCHES;
 
-// Address for the Rotary Encoders
+
+// CS PIN and Address for the Rotary Encoders
+#define MCP23S17T_CS_PIN_1  4
 #define MCP23S17T_ADDR_1    0x20
 Adafruit_MCP23X17 MCP23S17T_ROTARY_ENCODERS;
 
-// /**
-//  * Rotary encoder
-//  */
-// RotaryEncoder *encoder1 = nullptr;
-// RotaryEncoder *encoder2 = nullptr;
+/**
+ * Rotary encoder
+ */
+RotaryEncoder *left_encoder = nullptr;
+RotaryEncoder *right_encoder = nullptr;
 
 // /**
 //  * MCP23S17T
@@ -84,12 +82,13 @@ int16_t
   
   // ANO Rotary Navigation - Right
   rotary2_up, rotary2_down, rotary2_left, rotary2_right, rotary2_center, rotary2_enc1, rotary2_enc2,
-  
-  // Encored pos
-  pos,
 
   // Joysticks
-  joystick_x1, joystick_y1, joystick_x2, joystick_y2, joystick_x1_map, joystick_y1_map, joystick_x2_map, joystick_y2_map;
+  joystick_x1, joystick_y1, joystick_x2, joystick_y2, joystick_x1_map, joystick_y1_map, joystick_x2_map, joystick_y2_map,
+  
+  // Encored pos
+  left_encoder_pos  = 0,
+  right_encoder_pos = 0;
 
 // /**
 //  * SX1280

@@ -7,18 +7,16 @@
  */
 
 //#include <RadioLib.h>
-//#include <RotaryEncoder.h>
+#include <RotaryEncoder.h>
 #include <Adafruit_MCP23X17.h>
-
-// Custom Libraries
 #include <MCP3208.h>
 
 // #include <Wire.h>
 
+#include "config.h"
 #include "src/utils.h"
 #include "src/init.h"
 #include "src/setup.h"
-#include "config.h"
 #include "src/package.h"
 #include "src/default_package.h"
 #include "src/read_data.h"
@@ -46,26 +44,23 @@ void func_txReadData( void * pvParameters ){
       readPotentiometers();
 
       /**
-       * Read and set the values for the switches
+       * Read Rotary Encoders
        */
-    
-//       Serial.print(  potentiometer->readADC(0)); //access chip #1 input #0
-//       Serial.print(" : ");
-//       Serial.print(  potentiometer->readADC(1)); //access chip #1 input #0
-//       Serial.print(" : ");
-//       Serial.print(  potentiometer->readADC(2)); //access chip #1 input #0
-//       Serial.print(" : ");
-//       Serial.println(  potentiometer->readADC(3)); //access chip #1 input #0
-      // Read the MCP23S17T_1 : rotary encoder
-      // Read the MCP23S17T_2 : switches
+      readRotaryEncoders();
+
+      /**
+       * Switches Read
+       */
+      readSwitches();
     }
 }
-//
-///**
-// * We'll use core:1 for payload transmission
-// */
+
+/**
+* We'll use core:1 for payload transmission
+*/
 void func_txTransmitData( void * pvParameters ){
   while(true){
+    
 //     /*
 //       Radio Transmit
 //     */
@@ -96,68 +91,47 @@ void func_txTransmitData( void * pvParameters ){
 }
 
 void setup() {
-  // if(enable_serial_print) {
+  if(enable_serial_print) {
     Serial.begin(115200);
-    Serial.println("OK");
-  // }
+  }
 
   /**
    * Set the default values and 
    * create the structure for the payload
    */
-//  defaultValues();
+  defaultValues();
 
   /**
    * MCP3208 Init
    */
-   MCP3208_setup();
+  MCP3208_setup();
 
   /**
    * MCP23S17T setup
    */
-   MCP23S17T_setup();
-//
-//// //   // Enable the INPUT_PULLUP for the potentiometers
-//// //   potentiometersInit();
-//
-//// //   /*
-//// //     MCP23017
-//// //   */
-//// //   // MCP1 - Init
-//// //   mcp1Init();
-//
-//// //   // MCP2 - Init
-//// //   mcp2Init();
-//
-////   // SX1280
-////   sx1280Init();
-//
-//// //   // ads1115
-//// //   ads1115Init();
-//
-   xTaskCreatePinnedToCore(
-     func_txReadData,
-     "task_txReadData",
-     10000,
-     NULL,
-     4,
-     &task_txReadData,
-     taskCore1
-   );
+  MCP23S17T_setup();
 
-   xTaskCreatePinnedToCore(
-     func_txTransmitData,
-     "task_txTransmitData",
-     10000,
-     NULL,
-     3,
-     &task_txTransmitData,
-     taskCore2
-   );
+  xTaskCreatePinnedToCore(
+    func_txReadData,
+    "task_txReadData",
+    10000,
+    NULL,
+    4,
+    &task_txReadData,
+    taskCore1
+  );
 
+  xTaskCreatePinnedToCore(
+    func_txTransmitData,
+    "task_txTransmitData",
+    10000,
+    NULL,
+    3,
+    &task_txTransmitData,
+    taskCore2
+  );
 }
 //
 void loop() {
   // pass
-
 }
