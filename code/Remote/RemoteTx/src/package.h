@@ -44,8 +44,14 @@ typedef struct package {
   byte re1_left;
   byte re1_right;
   byte re1_center;
-  byte re1_pos;
-  char re1_dir;
+
+  // Split re1_pos into individual bytes
+  byte re1_pos_low;
+  byte re1_pos_mid_low;
+  byte re1_pos_mid_high;
+  byte re1_pos_high;
+
+  byte re1_dir;
 
   // Ano Rotary Encoder - Right
   byte re2_up;
@@ -53,8 +59,14 @@ typedef struct package {
   byte re2_left;
   byte re2_right;
   byte re2_center;
-  byte re2_pos;
-  char re2_dir;
+
+  // Split re2_pos into individual bytes
+  byte re2_pos_low;
+  byte re2_pos_mid_low;
+  byte re2_pos_mid_high;
+  byte re2_pos_high;
+
+  byte re2_dir;
 };
 const int union_size = sizeof(package);
 

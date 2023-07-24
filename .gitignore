@@ -1,4 +1,4 @@
 # General
 .DS_Store
 /build/
-/code/.vscode/
+.vscode

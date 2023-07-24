@@ -13,23 +13,11 @@
  */
 // Potentiometers
 #define MCP3208_CS_PIN_0 25
-MCP3208 * potentiometer;
-MCP3208 MCP3208_CHIP_0(
-    SCK_PIN,
-    MOSI_PIN,
-    MISO_PIN,
-    MCP3208_CS_PIN_0
-);
+MCP3208 potentiometer;
 
 // Joysticks
 #define MCP3208_CS_PIN_1 27
-MCP3208 * joystick;
-MCP3208 MCP3208_CHIP_1(
-    SCK_PIN,
-    MOSI_PIN,
-    MISO_PIN,
-    MCP3208_CS_PIN_1
-);
+MCP3208 joystick;
 
 /**
  * MCP23S17T Init
@@ -43,13 +31,16 @@ MCP3208 MCP3208_CHIP_1(
 // CS PIN and Address for the Switches
 #define MCP23S17T_CS_PIN_0  22
 #define MCP23S17T_ADDR_0    0x24
-Adafruit_MCP23X17 MCP23S17T_SWITCHES;
+// Adafruit_MCP23X17 MCP23S17T_SWITCHES;
+// MCP23S17 MCP23S17T_SWITCHES(MCP23S17T_CS_PIN_0, MCP23S17T_ADDR_0);
+MCP23S17 MCP23S17T_SWITCHES(MCP23S17T_CS_PIN_0, MCP23S17T_ADDR_0);
 
 
 // CS PIN and Address for the Rotary Encoders
 #define MCP23S17T_CS_PIN_1  4
 #define MCP23S17T_ADDR_1    0x20
-Adafruit_MCP23X17 MCP23S17T_ROTARY_ENCODERS;
+// Adafruit_MCP23X17 MCP23S17T_ROTARY_ENCODERS;
+MCP23S17 MCP23S17T_ROTARY_ENCODERS(MCP23S17T_CS_PIN_1, MCP23S17T_ADDR_1);
 
 /**
  * Rotary encoder
@@ -89,13 +80,3 @@ int16_t
   // Encored pos
   left_encoder_pos  = 0,
   right_encoder_pos = 0;
-
-// /**
-//  * SX1280
-//  */
-
-// // flag to indicate that a packet was sent
-// volatile bool transmittedFlag = false;
-
-// // disable interrupt when it's not needed
-// volatile bool enableInterrupt = true;

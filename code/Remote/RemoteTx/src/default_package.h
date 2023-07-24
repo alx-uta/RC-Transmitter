@@ -44,7 +44,12 @@ void defaultValues() {
   payload.structure.re1_left = 0;
   payload.structure.re1_right = 0;
   payload.structure.re1_center = 0;
-  payload.structure.re1_pos = 0;
+  
+  payload.structure.re1_pos_low = 0;
+  payload.structure.re1_pos_mid_low = 0;
+  payload.structure.re1_pos_mid_high = 0;
+  payload.structure.re1_pos_high = 0;
+  
   payload.structure.re1_dir = 0;
 
   // Ano Rotary Encoder - Right
@@ -53,6 +58,11 @@ void defaultValues() {
   payload.structure.re2_left = 0;
   payload.structure.re2_right = 0;
   payload.structure.re2_center = 0;
-  payload.structure.re2_pos = 0;
+  
+  payload.structure.re2_pos_low = 0;
+  payload.structure.re2_pos_mid_low = 0;
+  payload.structure.re2_pos_mid_high = 0;
+  payload.structure.re2_pos_high = 0;
+  
   payload.structure.re2_dir = 0;
 }

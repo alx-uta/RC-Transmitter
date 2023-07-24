@@ -10,10 +10,10 @@
  * Read the data for the joysticks
  */
 void readJoysticks() {
-  joystick_x1 = joystick->readADC(LEFT_JOYSTICK_X); // x left
-  joystick_y1 = joystick->readADC(LEFT_JOYSTICK_Y); // y left
-  joystick_x2 = joystick->readADC(RIGHT_JOYSTICK_X); // x right
-  joystick_y2 = joystick->readADC(RIGHT_JOYSTICK_Y); // y right
+  joystick_x1 = joystick.analogRead(LEFT_JOYSTICK_X); // x left
+  joystick_y1 = joystick.analogRead(LEFT_JOYSTICK_Y); // y left
+  joystick_x2 = joystick.analogRead(RIGHT_JOYSTICK_X); // x right
+  joystick_y2 = joystick.analogRead(RIGHT_JOYSTICK_Y); // y right
 
   // Left joystick
   joystick_x1_map = joystickMap(
@@ -80,12 +80,12 @@ void readJoysticks() {
  */
 void readPotentiometers() {
   // Potentiometer Values
-  pot1Read = potentiometer->readADC(POTENTIOMETER_1_ADC);
-  pot2Read = potentiometer->readADC(POTENTIOMETER_2_ADC);
-  pot3Read = potentiometer->readADC(POTENTIOMETER_3_ADC);
-  pot4Read = potentiometer->readADC(POTENTIOMETER_4_ADC);
-  pot5Read = potentiometer->readADC(POTENTIOMETER_5_ADC);
-  pot6Read = potentiometer->readADC(POTENTIOMETER_6_ADC);
+  pot1Read = potentiometer.analogRead(POTENTIOMETER_1_ADC);
+  pot2Read = potentiometer.analogRead(POTENTIOMETER_2_ADC);
+  pot3Read = potentiometer.analogRead(POTENTIOMETER_3_ADC);
+  pot4Read = potentiometer.analogRead(POTENTIOMETER_4_ADC);
+  pot5Read = potentiometer.analogRead(POTENTIOMETER_5_ADC);
+  pot6Read = potentiometer.analogRead(POTENTIOMETER_6_ADC);
   
   // Prevent jumping values
   pot1LastValue = ((pot1LastValue > pot1Read + pot_drift_value) || (pot1LastValue < pot1Read - pot_drift_value)) ? pot1Read : pot1LastValue;
@@ -108,6 +108,7 @@ void readPotentiometers() {
  * Rotary Encoders
  */
 void readRotaryEncoders() {
+  uint16_t pinState = MCP23S17T_ROTARY_ENCODERS.read16();
   int left_encoder_direction  = 0;
   int right_encoder_direction = 0;
   payload.structure.re1_dir = 0;
@@ -118,8 +119,8 @@ void readRotaryEncoders() {
   // Left
   left_encoder->tick(
     true,
-    MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_1_enc_b),
-    MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_1_enc_a)
+    (pinState & (1 << rotary_encoder_1_enc_b)) != 0,
+    (pinState & (1 << rotary_encoder_1_enc_a)) != 0
   );
   int left_encoder_new_pos = left_encoder->getPosition();
 
@@ -131,8 +132,8 @@ void readRotaryEncoders() {
   // Right
   right_encoder->tick(
     true,
-    MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_2_enc_b),
-    MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_2_enc_a)
+    (pinState & (1 << rotary_encoder_2_enc_b)) != 0,
+    (pinState & (1 << rotary_encoder_2_enc_a)) != 0
   );
   int right_encoder_new_pos = right_encoder->getPosition();
 
@@ -142,22 +143,32 @@ void readRotaryEncoders() {
   }
 
   // Left
-  payload.structure.re1_dir     = left_encoder_direction;
-  payload.structure.re1_pos     = left_encoder_new_pos;
-  payload.structure.re1_left    = MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_1_left);
-  payload.structure.re1_up      = MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_1_up);
-  payload.structure.re1_right   = MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_1_right);
-  payload.structure.re1_down    = MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_1_down);
-  payload.structure.re1_center  = MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_1_center);
+  payload.structure.re1_dir     = encoderDirection(left_encoder_direction);
+
+  payload.structure.re1_pos_low = (byte)(left_encoder_new_pos);
+  payload.structure.re1_pos_mid_low = (byte)(left_encoder_new_pos >> 8);
+  payload.structure.re1_pos_mid_high = (byte)(left_encoder_new_pos >> 16);
+  payload.structure.re1_pos_high = (byte)(left_encoder_new_pos >> 24);
+
+  payload.structure.re1_left    = (pinState & (1 << rotary_encoder_1_left)) != 0;
+  payload.structure.re1_up      = (pinState & (1 << rotary_encoder_1_up)) != 0;
+  payload.structure.re1_right   = (pinState & (1 << rotary_encoder_1_right)) != 0;
+  payload.structure.re1_down    = (pinState & (1 << rotary_encoder_1_down)) != 0;
+  payload.structure.re1_center  = (pinState & (1 << rotary_encoder_1_center)) != 0;
 
   // Right
-  payload.structure.re2_dir     = right_encoder_direction;
-  payload.structure.re2_pos     = right_encoder_new_pos;
-  payload.structure.re2_left    = MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_2_left);
-  payload.structure.re2_up      = MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_2_up);
-  payload.structure.re2_right   = MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_2_right);
-  payload.structure.re2_down    = MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_2_down);
-  payload.structure.re2_center  = MCP23S17T_ROTARY_ENCODERS.digitalRead(rotary_encoder_2_center);
+  payload.structure.re2_dir     = encoderDirection(right_encoder_direction);
+
+  payload.structure.re2_pos_low = (byte)(right_encoder_new_pos);
+  payload.structure.re2_pos_mid_low = (byte)(right_encoder_new_pos >> 8);
+  payload.structure.re2_pos_mid_high = (byte)(right_encoder_new_pos >> 16);
+  payload.structure.re2_pos_high = (byte)(right_encoder_new_pos >> 24);
+
+  payload.structure.re2_left    = (pinState & (1 << rotary_encoder_2_left)) != 0;
+  payload.structure.re2_up      = (pinState & (1 << rotary_encoder_2_up)) != 0;
+  payload.structure.re2_right   = (pinState & (1 << rotary_encoder_2_right)) != 0;
+  payload.structure.re2_down    = (pinState & (1 << rotary_encoder_2_down)) != 0;
+  payload.structure.re2_center  = (pinState & (1 << rotary_encoder_2_center)) != 0;
 }
 
 /**
@@ -165,22 +176,23 @@ void readRotaryEncoders() {
  */
 
 void readSwitches() {
+  uint16_t pinState = MCP23S17T_SWITCHES.read16();
   /**
    * Potentiometer Switch Button
    */
-  payload.structure.p1s = MCP23S17T_SWITCHES.digitalRead(button_switch_pot_1);
-  payload.structure.p2s = MCP23S17T_SWITCHES.digitalRead(button_switch_pot_2);
-  payload.structure.p3s = MCP23S17T_SWITCHES.digitalRead(button_switch_pot_3);
-  payload.structure.p4s = MCP23S17T_SWITCHES.digitalRead(button_switch_pot_4);
-  payload.structure.p5s = MCP23S17T_SWITCHES.digitalRead(button_switch_pot_5);
-  payload.structure.p6s = MCP23S17T_SWITCHES.digitalRead(button_switch_pot_6);
+  payload.structure.p1s = (pinState & (1 << button_switch_pot_1)) != 0;
+  payload.structure.p2s = (pinState & (1 << button_switch_pot_2)) != 0;
+  payload.structure.p3s = (pinState & (1 << button_switch_pot_3)) != 0;
+  payload.structure.p4s = (pinState & (1 << button_switch_pot_4)) != 0;
+  payload.structure.p5s = (pinState & (1 << button_switch_pot_5)) != 0;
+  payload.structure.p6s = (pinState & (1 << button_switch_pot_6)) != 0;
 
   /**
    * Switch Button
    */
-  payload.structure.s1 = MCP23S17T_SWITCHES.digitalRead(button_switch_1);
-  payload.structure.s2 = MCP23S17T_SWITCHES.digitalRead(button_switch_2);
-  payload.structure.s3 = MCP23S17T_SWITCHES.digitalRead(button_switch_3);
-  payload.structure.s4 = MCP23S17T_SWITCHES.digitalRead(button_switch_4);
-  payload.structure.s5 = MCP23S17T_SWITCHES.digitalRead(button_switch_5);
+  payload.structure.s1 = (pinState & (1 << button_switch_1)) != 0;
+  payload.structure.s2 = (pinState & (1 << button_switch_2)) != 0;
+  payload.structure.s3 = (pinState & (1 << button_switch_3)) != 0;
+  payload.structure.s4 = (pinState & (1 << button_switch_4)) != 0;
+  payload.structure.s5 = (pinState & (1 << button_switch_5)) != 0;
 }
