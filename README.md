@@ -10,6 +10,13 @@ Authors:
 
 ---
 
+# Useful links
+- [RC Transmitter Build Tutorial](https://microknot.dev/rc-transmitter-build-tutorial-esp32-sx1280/)
+- [RC Transmitter Wiring Tutorial](https://microknot.dev/rc-transmitter-wiring-tutorial-esp32-sx1280/)
+
+
+---
+
 - Required Parts:
   - [3D Files](https://docs.google.com/spreadsheets/d/1K6EamDLu7aNF5GFfuzi9vV8SCz_6HzOA_h1CgVDcLqo/edit?usp=sharing)
   - [PCB](https://docs.google.com/spreadsheets/d/1bTyJoKmJrHec9gnfRhsfcdIJgJ4cUt9kbDGZgcYngUU/edit?usp=sharing)
