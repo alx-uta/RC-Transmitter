@@ -69,31 +69,31 @@ int
      * Left Joystick
      */
     // Set the middle value
-    left_joystick_middle_value_x = 1993,
-    left_joystick_middle_value_y = 2134,
+    left_joystick_middle_value_x = 2045,
+    left_joystick_middle_value_y = 2004,
 
     // X1
-    left_joystick_min_value_x = 231, //216
-    left_joystick_max_value_x = 3747, //3772
+    left_joystick_min_value_x = 753,
+    left_joystick_max_value_x = 3380,
     
     // Y1
-    left_joystick_min_value_y = 683, //668
-    left_joystick_max_value_y = 3579, //3604
+    left_joystick_min_value_y = 521,
+    left_joystick_max_value_y = 3302,
 
     /**
      * Right Joystick
      */
     // X2
-    right_joystick_middle_value_x = 2045,
-    right_joystick_middle_value_y = 2004,
+    right_joystick_middle_value_x = 1993,
+    right_joystick_middle_value_y = 2134,
 
     // Y2
-    right_joystick_min_value_x = 753, //738
-    right_joystick_max_value_x = 3380, //3405
+    right_joystick_min_value_x = 231,
+    right_joystick_max_value_x = 3747,
     
     // Max value X/Y
-    right_joystick_min_value_y = 521, //506
-    right_joystick_max_value_y = 3302; // 3327
+    right_joystick_min_value_y = 683,
+    right_joystick_max_value_y = 3579;
 
 /**
  * SX1280
@@ -106,7 +106,7 @@ int
 float frequency     = 2410.5;
 int bitRate         = 520;
 int codingRate      = 2;
-int outputPower     = 5;
+int outputPower     = 6;
 float dataShaping   = 1.0;
 uint8_t syncWord[]  = {0x01, 0x23, 0x45, 0x67};
 int crcValue        = 1;
