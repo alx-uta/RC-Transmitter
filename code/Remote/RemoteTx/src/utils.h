@@ -17,12 +17,16 @@ int joystickMap(
 ) {
   int output;
   if (current_value < middle_value) {
-    output = map(current_value, min_value, middle_value, out_min, default_value);
+    output = map(
+      current_value, min_value, middle_value, out_min, default_value
+    );
     if(output<out_min) {
       return out_min;
     }
   } else {
-    output = map(current_value, middle_value, max_value, default_value, out_max);
+    output = map(
+      current_value, middle_value, max_value, default_value, out_max
+    );
     if(output>out_max) {
       return out_max;
     }
@@ -44,7 +48,7 @@ int encoderDirection(int direction) {
  * Feed the dog
  */
 void feedTheDog() {
-  TIMERG0.wdt_wprotect=TIMG_WDT_WKEY_VALUE;
-  TIMERG0.wdt_feed=1;
-  TIMERG0.wdt_wprotect=0;
+  TIMERG0.wdt_wprotect = TIMG_WDT_WKEY_VALUE;
+  TIMERG0.wdt_feed = 1;
+  TIMERG0.wdt_wprotect = 0;
 }

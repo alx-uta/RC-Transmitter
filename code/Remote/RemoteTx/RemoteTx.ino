@@ -21,24 +21,17 @@
 #include "src/default_package.h"
 #include "src/init.h"
 #include "src/utils.h"
-
-SX1280 radio = new Module(
-  SX1280_NSS,
-  SX1280_DI01,
-  SX1280_NRST,
-  SX1280_BUSY
-);
-
 #include "src/setup.h"
 #include "src/read_data.h"
 
+/**
+ * Define the tasks and cores
+ */
 static int taskCore1 = 0;
-static int taskCore2 = 1;
 TaskHandle_t task_txReadData;
-TaskHandle_t task_txTransmitData;
 
-// save transmission state between loops
-int transmissionState = RADIOLIB_ERR_NONE;
+static int taskCore2 = 1;
+TaskHandle_t task_txTransmitData;
 
 /**
  * We'll use core:0 to read 
@@ -83,31 +76,24 @@ void func_txTransmitData( void * pvParameters ){
       // reset flag
       transmittedFlag = false;
 
-      if (transmissionState == RADIOLIB_ERR_NONE) {
-        // packet was successfully sent
-        Serial.println(F("transmission finished!"));
-
-      } else {
+      if (transmissionState != RADIOLIB_ERR_NONE and enable_serial_print) {
         Serial.print(F("failed, code "));
         Serial.println(transmissionState);
       }
 
-      // clean up after transmission is finished
-      // this will ensure transmitter is disabled,
-      // RF switch is powered down etc.
+      /**
+       * Clean up after transmission is finished
+       * this will ensure transmitter is disabled,
+       * RF switch is powered down etc.
+       */
       radio.finishTransmit();
 
-      // send another one
-      Serial.print(F("[SX1280] Sending another packet ... "));
-      Serial.print(" (");
-      Serial.print(sizeof(payload.byteArray));
-      Serial.print(") ");
+      transmissionState = radio.startTransmit(
+        payload.byteArray, sizeof(
+          payload.byteArray
+        )
+      );
 
-      // you can transmit C-string or Arduino string up to
-      // 256 characters long
-      // String str = "Hello World! #" + String(count++);
-      // transmissionState = radio.startTransmit(str);
-      transmissionState = radio.startTransmit(payload.byteArray, sizeof(payload.byteArray));
     }
   }
 }
@@ -160,4 +146,5 @@ void setup() {
 }
 
 void loop() {
+  // Nothing to do
 }

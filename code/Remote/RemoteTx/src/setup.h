@@ -16,11 +16,11 @@ void MCP3208_setup() {
   digitalWrite(MCP3208_CS_PIN_1, HIGH);
   
   joystick.selectHSPI();
-  joystick.setSPIspeed(5000000);
+  joystick.setSPIspeed(MCP3208_SPI_SPEED);
   joystick.begin(MCP3208_CS_PIN_1);
 
   potentiometer.selectHSPI();
-  potentiometer.setSPIspeed(5000000);
+  potentiometer.setSPIspeed(MCP3208_SPI_SPEED);
   potentiometer.begin(MCP3208_CS_PIN_0);
 }
 
@@ -29,7 +29,7 @@ void MCP3208_setup() {
  */
 void MCP23S17T_setup() {
   MCP23S17T_SWITCHES.selectHSPI();
-  MCP23S17T_SWITCHES.setSPIspeed(10000000);
+  MCP23S17T_SWITCHES.setSPIspeed(MCP23S17T_SPI_SPEED);
   MCP23S17T_SWITCHES.begin();
   MCP23S17T_SWITCHES.pinMode16(0xFFFF);
   MCP23S17T_SWITCHES.setPullup16(0xFFFF);
@@ -37,7 +37,7 @@ void MCP23S17T_setup() {
 
 
   MCP23S17T_ROTARY_ENCODERS.selectHSPI();
-  MCP23S17T_ROTARY_ENCODERS.setSPIspeed(10000000);
+  MCP23S17T_ROTARY_ENCODERS.setSPIspeed(MCP23S17T_SPI_SPEED);
   MCP23S17T_ROTARY_ENCODERS.begin();
   MCP23S17T_ROTARY_ENCODERS.pinMode16(0xFFFF);
   MCP23S17T_ROTARY_ENCODERS.setPullup16(0xFFFF);
@@ -61,7 +61,6 @@ void MCP23S17T_setup() {
   );
 }
 
-
 // flag to indicate that a packet was sent
 volatile bool transmittedFlag = false;
 
@@ -77,16 +76,10 @@ void setFlag(void) {
   transmittedFlag = true;
 }
 
-// counter to keep track of transmitted packets
-int count = 0;
-
-
 /**
  * SX1280
  */
 void SX1280_setup() {
-
-  // initialize SX1280 with default settings
   Serial.print(F("[SX1280] Initializing ... "));
   int state = radio.beginFLRC();
 
@@ -98,29 +91,19 @@ void SX1280_setup() {
     while (true);
   }
 
-  state = radio.setFrequency(2410.5);
-  state = radio.setBitRate(520);
-  state = radio.setCodingRate(2);
-  state = radio.setOutputPower(5);
-  state = radio.setDataShaping(1.0);
-  uint8_t syncWord[] = {0x01, 0x23, 0x45, 0x67};
-  state = radio.setSyncWord(syncWord, 4);
-  if (state != RADIOLIB_ERR_NONE) {
+  state = radio.setFrequency(SX1280_FREQUENCY);
+  state = radio.setBitRate(SX1280_BIT_RATE);
+  state = radio.setCodingRate(SX1280_CODING_RATE);
+  state = radio.setOutputPower(SX1280_OUTPUT_POWER);
+  state = radio.setDataShaping(SX1280_DATA_SHAPING);
+  state = radio.setSyncWord(SX1280_SYNC_WORD, 4);
+
+  if (state != RADIOLIB_ERR_NONE and enable_serial_print) {
     Serial.print(F("Unable to set configuration, code "));
     Serial.println(state);
     while (true);
   }
 
-  // set the function that will be called
-  // when packet transmission is finished
   radio.setPacketSentAction(setFlag);
-
-  // start transmitting the first packet
-  Serial.print(F("[SX1280] Sending first packet ... "));
-  // you can also transmit byte array up to 256 bytes long
-  // byte byteArr[] = {0x01, 0x23, 0x45, 0x67,
-  //                   0x89, 0xAB, 0xCD, 0xEF};
-  // state = radio.startTransmit(byteArr, 8);
   state = radio.startTransmit(payload.byteArray, sizeof(payload.byteArray));
-    
 }

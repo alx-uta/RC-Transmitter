@@ -10,10 +10,14 @@
  * Read the data for the joysticks
  */
 void readJoysticks() {
-  joystick_x1 = joystick.analogRead(LEFT_JOYSTICK_X); // x left
-  joystick_y1 = joystick.analogRead(LEFT_JOYSTICK_Y); // y left
-  joystick_x2 = joystick.analogRead(RIGHT_JOYSTICK_X); // x right
-  joystick_y2 = joystick.analogRead(RIGHT_JOYSTICK_Y); // y right
+  joystick_x1 = joystick.analogRead(LEFT_JOYSTICK_X);
+  joystick_y1 = joystick.analogRead(LEFT_JOYSTICK_Y);
+  joystick_x2 = joystick.analogRead(RIGHT_JOYSTICK_X);
+  joystick_y2 = joystick.analogRead(RIGHT_JOYSTICK_Y);
+
+  /**
+   * Read the joysticks and map the values
+   */
 
   // Left joystick
   joystick_x1_map = joystickMap(
@@ -55,7 +59,10 @@ void readJoysticks() {
     joystick_max_out
   );
 
-  // Set the payload accounting for the drift value
+  /**
+   * Set the payload accounting for the drift value
+   */
+
   // Left Joystick
   payload.structure.j1x = (
     joystick_x1 > left_joystick_middle_value_x + joystick_drift_value || joystick_x1 < left_joystick_middle_value_x - joystick_drift_value
@@ -145,10 +152,10 @@ void readRotaryEncoders() {
   // Left
   payload.structure.re1_dir     = encoderDirection(left_encoder_direction);
 
-  payload.structure.re1_pos_low = (byte)(left_encoder_new_pos);
-  payload.structure.re1_pos_mid_low = (byte)(left_encoder_new_pos >> 8);
-  payload.structure.re1_pos_mid_high = (byte)(left_encoder_new_pos >> 16);
-  payload.structure.re1_pos_high = (byte)(left_encoder_new_pos >> 24);
+  payload.structure.re1_pos_low       = (byte)(left_encoder_new_pos);
+  payload.structure.re1_pos_mid_low   = (byte)(left_encoder_new_pos >> 8);
+  payload.structure.re1_pos_mid_high  = (byte)(left_encoder_new_pos >> 16);
+  payload.structure.re1_pos_high      = (byte)(left_encoder_new_pos >> 24);
 
   payload.structure.re1_left    = (pinState & (1 << rotary_encoder_1_left)) != 0;
   payload.structure.re1_up      = (pinState & (1 << rotary_encoder_1_up)) != 0;
@@ -159,10 +166,10 @@ void readRotaryEncoders() {
   // Right
   payload.structure.re2_dir     = encoderDirection(right_encoder_direction);
 
-  payload.structure.re2_pos_low = (byte)(right_encoder_new_pos);
-  payload.structure.re2_pos_mid_low = (byte)(right_encoder_new_pos >> 8);
-  payload.structure.re2_pos_mid_high = (byte)(right_encoder_new_pos >> 16);
-  payload.structure.re2_pos_high = (byte)(right_encoder_new_pos >> 24);
+  payload.structure.re2_pos_low       = (byte)(right_encoder_new_pos);
+  payload.structure.re2_pos_mid_low   = (byte)(right_encoder_new_pos >> 8);
+  payload.structure.re2_pos_mid_high  = (byte)(right_encoder_new_pos >> 16);
+  payload.structure.re2_pos_high      = (byte)(right_encoder_new_pos >> 24);
 
   payload.structure.re2_left    = (pinState & (1 << rotary_encoder_2_left)) != 0;
   payload.structure.re2_up      = (pinState & (1 << rotary_encoder_2_up)) != 0;

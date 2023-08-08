@@ -8,12 +8,12 @@
 
 void defaultValues() {
   // Joystick - Left
-  payload.structure.j1x = 127; // left-right
-  payload.structure.j1y = 127; // up-down
+  payload.structure.j1x = joystick_default_value; // left-right
+  payload.structure.j1y = joystick_default_value; // up-down
 
   // Joystick - Right
-  payload.structure.j2x = 127; // left-right
-  payload.structure.j2y = 127; // up-down
+  payload.structure.j2x = joystick_default_value; // left-right
+  payload.structure.j2y = joystick_default_value; // up-down
 
   // Potentiometers
   payload.structure.p1 = 0;

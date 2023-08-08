@@ -6,6 +6,25 @@
 #define MOSI_PIN  13
 
 /**
+ * SX1280 Init
+ */
+
+// save transmission state between loops
+int transmissionState = RADIOLIB_ERR_NONE;
+
+#define SX1280_NSS  2
+#define SX1280_DI01 26
+#define SX1280_NRST 5
+#define SX1280_BUSY 21
+
+SX1280 radio = new Module(
+  SX1280_NSS,
+  SX1280_DI01,
+  SX1280_NRST,
+  SX1280_BUSY
+);
+
+/**
  * MCP3208 Init
  * 
  * This is used for reading the data 
@@ -31,26 +50,24 @@ MCP3208 joystick;
 // CS PIN and Address for the Switches
 #define MCP23S17T_CS_PIN_0  22
 #define MCP23S17T_ADDR_0    0x24
-// Adafruit_MCP23X17 MCP23S17T_SWITCHES;
-// MCP23S17 MCP23S17T_SWITCHES(MCP23S17T_CS_PIN_0, MCP23S17T_ADDR_0);
-MCP23S17 MCP23S17T_SWITCHES(MCP23S17T_CS_PIN_0, MCP23S17T_ADDR_0);
-
+MCP23S17 MCP23S17T_SWITCHES(
+  MCP23S17T_CS_PIN_0,
+  MCP23S17T_ADDR_0
+);
 
 // CS PIN and Address for the Rotary Encoders
 #define MCP23S17T_CS_PIN_1  4
 #define MCP23S17T_ADDR_1    0x20
-// Adafruit_MCP23X17 MCP23S17T_ROTARY_ENCODERS;
-MCP23S17 MCP23S17T_ROTARY_ENCODERS(MCP23S17T_CS_PIN_1, MCP23S17T_ADDR_1);
+MCP23S17 MCP23S17T_ROTARY_ENCODERS(
+  MCP23S17T_CS_PIN_1,
+  MCP23S17T_ADDR_1
+);
 
 /**
  * Rotary encoder
  */
 RotaryEncoder *left_encoder = nullptr;
 RotaryEncoder *right_encoder = nullptr;
-
-// /**
-//  * MCP23S17T
-//  */
 
 int16_t
   // Potentiometer Values
