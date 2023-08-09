@@ -5,6 +5,8 @@
  * Alex Uta
  * microknot.dev
  */
+
+// ESP32 specific files
 #include "soc/timer_group_struct.h"
 #include "soc/timer_group_reg.h"
 
@@ -16,33 +18,14 @@
 #include <MCP23S17.h>
 
 // Config & Init Files
-#include "config.h"
+#include "user_config.h"
+#include "src/config.h"
+#include "src/utils.h"
 #include "src/package.h"
 #include "src/default_package.h"
 #include "src/init.h"
-#include "src/utils.h"
-
-SX1280 radio = new Module(
-  SX1280_NSS,
-  SX1280_DI01,
-  SX1280_NRST,
-  SX1280_BUSY
-);
-
 #include "src/setup.h"
 #include "src/read_data.h"
-
-/**
- * Define the tasks and cores
- */
-static int taskCore1 = 0;
-TaskHandle_t task_txReadData;
-
-static int taskCore2 = 1;
-TaskHandle_t task_txTransmitData;
-
-// save transmission state between loops
-int transmissionState = RADIOLIB_ERR_NONE;
 
 /**
  * We'll use core:0 to read 
@@ -87,9 +70,17 @@ void func_txTransmitData( void * pvParameters ){
       // reset flag
       transmittedFlag = false;
 
-      if (transmissionState != RADIOLIB_ERR_NONE and enable_serial_print) {
-        Serial.print(F("failed, code "));
-        Serial.println(transmissionState);
+      if(enable_serial_print) {
+        if (transmissionState == RADIOLIB_ERR_NONE) {
+          Serial.println(F("[SX1280] Packet transmitted successfully!"));
+        } else if (transmissionState == RADIOLIB_ERR_PACKET_TOO_LONG) {
+          Serial.println(F("[SX1280] Packet too long!"));
+        } else if (transmissionState == RADIOLIB_ERR_TX_TIMEOUT) {
+          Serial.println(F("[SX1280] Timed out while transmitting!"));
+        } else {
+          Serial.println(F("[SX1280] Failed to transmit packet, code "));
+          Serial.println(transmissionState);
+        }
       }
 
       /**

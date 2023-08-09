@@ -2,4 +2,4 @@
 .DS_Store
 /build/
 .vscode
-code/Remote/RemoteTx/config.h
+code/Remote/RemoteTx/user_config.h

@@ -13,6 +13,16 @@
 #define SX1280_NRST 5
 #define SX1280_BUSY 21
 
+SX1280 radio = new Module(
+  SX1280_NSS,
+  SX1280_DI01,
+  SX1280_NRST,
+  SX1280_BUSY
+);
+
+// save transmission state between loops
+int transmissionState = RADIOLIB_ERR_NONE;
+
 /**
  * MCP3208 Init
  * 
@@ -86,3 +96,12 @@ int16_t
   // Encored pos
   left_encoder_pos  = 0,
   right_encoder_pos = 0;
+
+/**
+ * Define the tasks and cores
+ */
+static int taskCore1 = 0;
+TaskHandle_t task_txReadData;
+
+static int taskCore2 = 1;
+TaskHandle_t task_txTransmitData;
