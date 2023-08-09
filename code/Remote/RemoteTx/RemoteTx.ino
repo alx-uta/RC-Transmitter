@@ -21,6 +21,14 @@
 #include "src/default_package.h"
 #include "src/init.h"
 #include "src/utils.h"
+
+SX1280 radio = new Module(
+  SX1280_NSS,
+  SX1280_DI01,
+  SX1280_NRST,
+  SX1280_BUSY
+);
+
 #include "src/setup.h"
 #include "src/read_data.h"
 
@@ -32,6 +40,9 @@ TaskHandle_t task_txReadData;
 
 static int taskCore2 = 1;
 TaskHandle_t task_txTransmitData;
+
+// save transmission state between loops
+int transmissionState = RADIOLIB_ERR_NONE;
 
 /**
  * We'll use core:0 to read 

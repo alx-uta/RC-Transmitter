@@ -98,6 +98,9 @@ void SX1280_setup() {
   state = radio.setDataShaping(SX1280_DATA_SHAPING);
   state = radio.setSyncWord(SX1280_SYNC_WORD, 4);
 
+  /**
+   * @todo validate each part of the config
+   */
   if (state != RADIOLIB_ERR_NONE and enable_serial_print) {
     Serial.print(F("Unable to set configuration, code "));
     Serial.println(state);
@@ -105,5 +108,11 @@ void SX1280_setup() {
   }
 
   radio.setPacketSentAction(setFlag);
-  state = radio.startTransmit(payload.byteArray, sizeof(payload.byteArray));
+
+  /**
+   * Start the connexion and transmit the first package
+   */
+  state = radio.startTransmit(
+    payload.byteArray, sizeof(payload.byteArray)
+  );
 }

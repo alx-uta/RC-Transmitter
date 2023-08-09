@@ -8,21 +8,10 @@
 /**
  * SX1280 Init
  */
-
-// save transmission state between loops
-int transmissionState = RADIOLIB_ERR_NONE;
-
 #define SX1280_NSS  2
 #define SX1280_DI01 26
 #define SX1280_NRST 5
 #define SX1280_BUSY 21
-
-SX1280 radio = new Module(
-  SX1280_NSS,
-  SX1280_DI01,
-  SX1280_NRST,
-  SX1280_BUSY
-);
 
 /**
  * MCP3208 Init
