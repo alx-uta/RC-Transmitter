@@ -2,4 +2,7 @@
 .DS_Store
 /build/
 .vscode
-code/Remote/RemoteTx/user_config.h
+**/user_config.h
+**/debug.cfg
+**/debug_custom.json
+**/esp32.svd
