@@ -72,7 +72,7 @@ void func_txTransmitData( void * pvParameters ){
 
       if(enable_serial_print) {
         if (transmissionState == RADIOLIB_ERR_NONE) {
-          Serial.println(F("[SX1280] Packet transmitted successfully!"));
+          // Serial.println(F("[SX1280] Packet transmitted successfully!"));
         } else if (transmissionState == RADIOLIB_ERR_PACKET_TOO_LONG) {
           Serial.println(F("[SX1280] Packet too long!"));
         } else if (transmissionState == RADIOLIB_ERR_TX_TIMEOUT) {
@@ -80,6 +80,18 @@ void func_txTransmitData( void * pvParameters ){
         } else {
           Serial.println(F("[SX1280] Failed to transmit packet, code "));
           Serial.println(transmissionState);
+        }
+
+        if(enable_debug) {
+          int array_size = sizeof(payload.byteArray);
+          for(int i=0; i < array_size; i++)
+          {
+            Serial.print(payload.byteArray[i]);
+            if(i < array_size) {
+              Serial.print(" : "); 
+            }
+          }
+          Serial.println();
         }
       }
 
