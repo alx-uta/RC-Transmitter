@@ -48,11 +48,3 @@
 #define POTENTIOMETER_4_ADC 3
 #define POTENTIOMETER_5_ADC 4
 #define POTENTIOMETER_6_ADC 5
-
-/**
- * Joysticks
- */
-#define LEFT_JOYSTICK_X  0
-#define LEFT_JOYSTICK_Y  1
-#define RIGHT_JOYSTICK_X 2
-#define RIGHT_JOYSTICK_Y 3
