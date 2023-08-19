@@ -6,15 +6,14 @@ Authors:
 - Alex Heisler
 
 # Project Status
-- WIP
+- [https://microknot.dev/rc-transmitter-project-status/](https://microknot.dev/rc-transmitter-project-status/)
 
 ---
 
 # Useful links
-- [Project Status](https://microknot.dev/rc-transmitter-project-status/)
-- [RC Transmitter Build Tutorial](https://microknot.dev/rc-transmitter-build-tutorial-esp32-sx1280/)
-- [RC Transmitter Wiring Tutorial](https://microknot.dev/rc-transmitter-wiring-tutorial-esp32-sx1280/)
-
+- [Build Tutorial](https://microknot.dev/rc-transmitter-build-tutorial-esp32-sx1280/)
+- [Wiring Tutorial](https://microknot.dev/rc-transmitter-wiring-tutorial-esp32-sx1280/)
+- [Calibration Tutorial](https://microknot.dev/rc-transmitter-calibration-tutorial/)
 
 ---
 
