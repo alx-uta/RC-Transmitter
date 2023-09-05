@@ -34,47 +34,7 @@
 */
 void func_txTransmitData( void * pvParameters ){
     while(true){
-        // check if the previous transmission finished
-        if(transmittedFlag) {
-            // reset flag
-            transmittedFlag = false;
-
-            #if ENABLE_SERIAL_PRINT
-                #if ENABLE_RADIO_LIB_DEBUG
-                    if (transmissionState == RADIOLIB_ERR_NONE) {
-                        // Serial.println(F("[SX1280] Packet transmitted successfully!"));
-                    } else if (transmissionState == RADIOLIB_ERR_PACKET_TOO_LONG) {
-                        Serial.println(F("[SX1280] Packet too long!"));
-                    } else if (transmissionState == RADIOLIB_ERR_TX_TIMEOUT) {
-                        Serial.println(F("[SX1280] Timed out while transmitting!"));
-                    } else {
-                        Serial.println(F("[SX1280] Failed to transmit packet, code "));
-                        Serial.println(transmissionState);
-                    }
-                #endif
-
-                #if ENABLE_DEBUG
-                    // Debug the payload
-                    _payload = _TX.getByteArray();
-                    array_size = sizeof(_TX._payload.byteArray);
-                    for(int i=0; i < array_size; i++)
-                    {
-                        Serial.print(_payload[i]);
-                        if(i < array_size - 1) {
-                            Serial.print(" : "); 
-                        }
-                    }
-                    Serial.println();
-                #endif
-            #endif
-
-            _payload = _TX.getByteArray();
-            array_size = sizeof(_TX._payload.byteArray);
-            transmissionState = radio.startTransmit(
-                _payload, array_size
-            );
-
-        }
+        transmitData();
         feedTheDog();
     }
 }
