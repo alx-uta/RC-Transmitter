@@ -3449,7 +3449,6 @@ Source: &lt;a href="https://www.molex.com/pdm_docs/sd/532610871_sd.pdf"&gt; Data
 <part name="R5" library="SparkFun-Resistors" library_urn="urn:adsk.eagle:library:532" deviceset="0OHM" device="-0603-1/10W-5%" package3d_urn="urn:adsk.eagle:package:39650/1" value="10k"/>
 <part name="R6" library="SparkFun-Resistors" library_urn="urn:adsk.eagle:library:532" deviceset="0OHM" device="-0603-1/10W-5%" package3d_urn="urn:adsk.eagle:package:39650/1" value="10k"/>
 <part name="GND10" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="U$7" library="microbuilder" deviceset="3.3V" device=""/>
 <part name="LS1" library="SMTB-0940-T-3V-R" deviceset="SMTB-0940-T-3V-R" device=""/>
 <part name="GND13" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="GND14" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
@@ -3457,6 +3456,7 @@ Source: &lt;a href="https://www.molex.com/pdm_docs/sd/532610871_sd.pdf"&gt; Data
 <part name="R8" library="SparkFun-Resistors" library_urn="urn:adsk.eagle:library:532" deviceset="0OHM" device="-0603-1/10W-5%" package3d_urn="urn:adsk.eagle:package:39650/1" value="0"/>
 <part name="R9" library="SparkFun-Resistors" library_urn="urn:adsk.eagle:library:532" deviceset="0OHM" device="-0603-1/10W-5%" package3d_urn="urn:adsk.eagle:package:39650/1" value="0"/>
 <part name="U$2" library="microbuilder" deviceset="3.3V" device=""/>
+<part name="U$7" library="microbuilder" deviceset="VIN" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -3620,9 +3620,6 @@ Source: &lt;a href="https://www.molex.com/pdm_docs/sd/532610871_sd.pdf"&gt; Data
 <instance part="GND10" gate="1" x="-28.02" y="75.2" smashed="yes" rot="R270">
 <attribute name="VALUE" x="-30.56" y="77.74" size="1.778" layer="96" rot="R270"/>
 </instance>
-<instance part="U$7" gate="G$1" x="-27.94" y="48.26" smashed="yes" rot="R90">
-<attribute name="VALUE" x="-28.956" y="46.736" size="1.27" layer="96" rot="R90"/>
-</instance>
 <instance part="LS1" gate="G$1" x="45.72" y="157.48" smashed="yes">
 <attribute name="NAME" x="44.45" y="163.83" size="1.778" layer="95"/>
 <attribute name="VALUE" x="44.45" y="149.225" size="1.778" layer="96"/>
@@ -3644,6 +3641,9 @@ Source: &lt;a href="https://www.molex.com/pdm_docs/sd/532610871_sd.pdf"&gt; Data
 </instance>
 <instance part="U$2" gate="G$1" x="15.24" y="142.24" smashed="yes">
 <attribute name="VALUE" x="13.716" y="143.256" size="1.27" layer="96"/>
+</instance>
+<instance part="U$7" gate="G$1" x="-27.94" y="48.26" smashed="yes" rot="R90">
+<attribute name="VALUE" x="-28.956" y="46.736" size="1.27" layer="96" rot="R90"/>
 </instance>
 </instances>
 <busses>
@@ -3832,11 +3832,6 @@ Source: &lt;a href="https://www.molex.com/pdm_docs/sd/532610871_sd.pdf"&gt; Data
 <wire x1="-25.4" y1="91.44" x2="-25.4" y2="88.9" width="0.1524" layer="91"/>
 <wire x1="-25.4" y1="88.9" x2="-12.7" y2="88.9" width="0.1524" layer="91"/>
 <pinref part="LCD" gate="G$1" pin="2"/>
-</segment>
-<segment>
-<pinref part="U$7" gate="G$1" pin="3.3V"/>
-<wire x1="-25.4" y1="48.26" x2="-25.4" y2="50.8" width="0.1524" layer="91"/>
-<pinref part="R6" gate="G$1" pin="1"/>
 </segment>
 <segment>
 <pinref part="R7" gate="G$1" pin="2"/>
@@ -4222,12 +4217,18 @@ Source: &lt;a href="https://www.molex.com/pdm_docs/sd/532610871_sd.pdf"&gt; Data
 <junction x="7.62" y="-2.54"/>
 <junction x="7.62" y="0"/>
 </segment>
+<segment>
+<wire x1="-25.4" y1="48.26" x2="-25.4" y2="50.8" width="0.1524" layer="91"/>
+<pinref part="R6" gate="G$1" pin="1"/>
+<pinref part="U$7" gate="G$1" pin="VIN"/>
+</segment>
 </net>
 <net name="GPIO35*" class="0">
 <segment>
 <pinref part="IC4" gate="G$1" pin="IO35"/>
 <wire x1="-81.28" y1="185.42" x2="-93.98" y2="185.42" width="0.1524" layer="91"/>
 <label x="-93.98" y="185.42" size="1.778" layer="95"/>
+<label x="-22.86" y="60.96" size="1.778" layer="95"/>
 </segment>
 <segment>
 <pinref part="R5" gate="G$1" pin="1"/>
