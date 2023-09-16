@@ -91,7 +91,7 @@ void setup() {
             "task_txReadData",
             100 * 1024,
             NULL,
-            0,
+            20,
             &task_txReadData,
             taskCore1
         );
@@ -101,7 +101,7 @@ void setup() {
             "task_txTransmitData",
             100 * 1024,
             NULL,
-            1,
+            19,
             &task_txTransmitData,
             taskCore2
         );

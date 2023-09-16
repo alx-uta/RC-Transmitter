@@ -31,3 +31,19 @@ int Tx::joystickMap(
     return (output > out_max) ? out_max : output;
   }
 }
+
+uint16_t Tx::encodeSwitchStatusesToByte(bool switchStatuses[], int numSwitches) {
+    uint16_t encodedByte = 0;
+
+    for (int i = 0; i < numSwitches; i++) {
+        encodedByte |= (switchStatuses[i] << i);
+    }
+
+    return encodedByte;
+}
+
+void Tx::decodeByteToSwitchStatuses(uint16_t encodedByte, bool switchStatuses[], int numSwitches) {
+  for (int i = 0; i < numSwitches; i++) {
+    switchStatuses[i] = (encodedByte >> i) & 0x01;
+  }
+}

@@ -40,6 +40,7 @@ Config::Config (
     uint8_t pot_drift_value,
     uint8_t pot_min,
     int pot_max,
+    uint8_t pot_out_min,
     uint8_t pot_out_max
 ) {
     // Joystick General
@@ -73,5 +74,6 @@ Config::Config (
     Config::pot_drift_value = pot_drift_value;
     Config::pot_min = pot_min;
     Config::pot_max = pot_max;
+    Config::pot_out_min = pot_out_min;
     Config::pot_out_max = pot_out_max;
 }

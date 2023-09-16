@@ -34,6 +34,5 @@ Tx::Tx(
 void Tx::readData() {
     Tx::joysticks();
     Tx::potentiometers();
-    Tx::rotaryEncoders();
-    Tx::switches();
+    Tx::readMCP23S17();
 }
