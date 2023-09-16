@@ -38,7 +38,9 @@ void Tx::joysticks() {
 
     // Joysticks Values
     int16_t readings[joysticks_num_channels];
-    _joystick.analogReadMultiple(joysticks_channels, joysticks_num_channels, readings);
+    _joystick.analogReadMultiple(
+        joysticks_channels, joysticks_num_channels, readings
+    );
 
     joystick_x1 = readings[_config.LEFT_JOYSTICK_X];
     joystick_y1 = readings[_config.LEFT_JOYSTICK_Y];
@@ -89,12 +91,32 @@ void Tx::joysticks() {
      * Set the payload accounting for the drift value
      */
     // Left Joystick
-    x1 = Tx::applyJoystickThreshold(joystick_x1, _config.left_joystick_middle_value_x, _config.left_joystick_drift_value_x, joystick_x1_map);
-    y1 = Tx::applyJoystickThreshold(joystick_y1, _config.left_joystick_middle_value_y, _config.left_joystick_drift_value_y, joystick_y1_map);
+    x1 = Tx::applyJoystickThreshold(
+        joystick_x1,
+        _config.left_joystick_middle_value_x,
+        _config.left_joystick_drift_value_x,
+        joystick_x1_map
+    );
+    y1 = Tx::applyJoystickThreshold(
+        joystick_y1,
+        _config.left_joystick_middle_value_y,
+        _config.left_joystick_drift_value_y,
+        joystick_y1_map
+    );
 
     // Right Joystick
-    x2 = Tx::applyJoystickThreshold(joystick_x2, _config.right_joystick_middle_value_x, _config.right_joystick_drift_value_x, joystick_x2_map);
-    y2 = Tx::applyJoystickThreshold(joystick_y2, _config.right_joystick_middle_value_y, _config.right_joystick_drift_value_y, joystick_y2_map);
+    x2 = Tx::applyJoystickThreshold(
+        joystick_x2,
+        _config.right_joystick_middle_value_x,
+        _config.right_joystick_drift_value_x,
+        joystick_x2_map
+    );
+    y2 = Tx::applyJoystickThreshold(
+        joystick_y2,
+        _config.right_joystick_middle_value_y,
+        _config.right_joystick_drift_value_y,
+        joystick_y2_map
+    );
 
     Tx::setLeftJoystick(x1, y1);
     Tx::setRightJoystick(x2, y2);
@@ -167,18 +189,18 @@ void Tx::potentiometers() {
 /**
  * Read the data for the rotary encoders
  */
-void Tx::rotaryEncoders() {
-    uint16_t pinState = _rotaryRead.read16();
+void Tx::readMCP23S17() {
+    uint16_t pin_state_encoders = _rotaryRead.read16();
 
     // Get the encoder position
     Tx::leftAnoRotaryEncoderPosition -= _leftRotary.encoderDirection(
-        (pinState & (1 << _config.rotary_encoder_1_enc_b)) != 0,
-        (pinState & (1 << _config.rotary_encoder_1_enc_a)) != 0
+        (pin_state_encoders & (1 << _config.rotary_encoder_1_enc_b)) != 0,
+        (pin_state_encoders & (1 << _config.rotary_encoder_1_enc_a)) != 0
     );
 
     Tx::rightAnoRotaryEncoderPosition -= _rightRotary.encoderDirection(
-        (pinState & (1 << _config.rotary_encoder_2_enc_b)) != 0,
-        (pinState & (1 << _config.rotary_encoder_2_enc_a)) != 0
+        (pin_state_encoders & (1 << _config.rotary_encoder_2_enc_b)) != 0,
+        (pin_state_encoders & (1 << _config.rotary_encoder_2_enc_a)) != 0
     );
 
     // Update the encoder position
@@ -196,51 +218,10 @@ void Tx::rotaryEncoders() {
         (uint8_t)(Tx::rightAnoRotaryEncoderPosition >> 24)
     );
 
-    // Update the push buttons
-    Tx::setAnoRotaryEncoderLeft(
-        (pinState & (1 << _config.rotary_encoder_1_up)) != 0,
-        (pinState & (1 << _config.rotary_encoder_1_down)) != 0,
-        (pinState & (1 << _config.rotary_encoder_1_left)) != 0,
-        (pinState & (1 << _config.rotary_encoder_1_right)) != 0,
-        (pinState & (1 << _config.rotary_encoder_1_center)) != 0
-    );
-
-    Tx::setAnoRotaryEncoderRight(
-        (pinState & (1 << _config.rotary_encoder_2_up)) != 0,
-        (pinState & (1 << _config.rotary_encoder_2_down)) != 0,
-        (pinState & (1 << _config.rotary_encoder_2_left)) != 0,
-        (pinState & (1 << _config.rotary_encoder_2_right)) != 0,
-        (pinState & (1 << _config.rotary_encoder_2_center)) != 0
-    );
-}
-
-
-/**
- * Read the data for the switches
- */
-void Tx::switches() {
-
-    uint16_t pinState = _switches.read16();
-    /**
-     * Potentiometer Switch Button
-     */
-    Tx::setPotentiometerSwitches(
-        (pinState & (1 << _config.button_switch_pot_1)) != 0,
-        (pinState & (1 << _config.button_switch_pot_2)) != 0,
-        (pinState & (1 << _config.button_switch_pot_3)) != 0,
-        (pinState & (1 << _config.button_switch_pot_4)) != 0,
-        (pinState & (1 << _config.button_switch_pot_5)) != 0,
-        (pinState & (1 << _config.button_switch_pot_6)) != 0
-    );
-
-    /**
-     * Switch Button
-     */
-    Tx::setSwitches(
-        (pinState & (1 << _config.button_switch_1)) != 0,
-        (pinState & (1 << _config.button_switch_2)) != 0,
-        (pinState & (1 << _config.button_switch_3)) != 0,
-        (pinState & (1 << _config.button_switch_4)) != 0,
-        (pinState & (1 << _config.button_switch_5)) != 0
+    // pin_state_encoders
+    uint16_t pin_state_switches = _switches.read16();
+    Tx::setSwitchesPushButtons(
+        pin_state_encoders,
+        pin_state_switches
     );
 }

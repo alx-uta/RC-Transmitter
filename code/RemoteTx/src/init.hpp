@@ -38,6 +38,7 @@ Config TX_CONFIG(
     pot_drift_value,
     pot_min,
     pot_max,
+    pot_out_min,
     pot_out_max
 );
 

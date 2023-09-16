@@ -69,7 +69,7 @@ void setFlag(void) {
  * SX1280
  */
 void SX1280_setup() {
-    int state = radio.beginFLRC();
+    int state = radio.beginGFSK();
 
     array_size = sizeof(_TX._payload.byteArray);
     radio.implicitHeader(array_size);
@@ -91,6 +91,7 @@ void SX1280_setup() {
     state = radio.setGainControl(SX1280_GAIN_CONTROL);
 
     state = radio.setFrequency(SX1280_FREQUENCY);
+    state = radio.setFrequencyDeviation(SX1280_FREQUENCY_DEVIATION);
     state = radio.setBitRate(SX1280_BIT_RATE);
     state = radio.setCodingRate(SX1280_CODING_RATE);
     state = radio.setDataShaping(SX1280_DATA_SHAPING);

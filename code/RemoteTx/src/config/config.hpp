@@ -45,6 +45,7 @@ class Config {
             uint8_t pot_drift_value,
             uint8_t pot_min,
             int pot_max,
+            uint8_t pot_out_min,
             uint8_t pot_out_max
         );
         /**
@@ -159,6 +160,7 @@ class Config {
         uint8_t pot_drift_value;
         uint8_t pot_min;
         int pot_max;
+        uint8_t pot_out_min;
         uint8_t pot_out_max;
 
         // @todo: allow a public function to change the config for: 

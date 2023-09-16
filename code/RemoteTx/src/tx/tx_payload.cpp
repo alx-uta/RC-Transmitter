@@ -9,6 +9,9 @@
 #include "tx.hpp"
 
 void Tx::defaultValues() {
+    // Identifier
+    this->_payload.structure.sender = 1;
+
     // Joystick - Left
     this->_payload.structure.j1x = joystick_default_value; // left-right
     this->_payload.structure.j1y = joystick_default_value; // up-down
@@ -25,44 +28,20 @@ void Tx::defaultValues() {
     this->_payload.structure.p5 = 0;
     this->_payload.structure.p6 = 0;
 
-    // Potentiometers - Switches
-    this->_payload.structure.p1s = 0;
-    this->_payload.structure.p2s = 0;
-    this->_payload.structure.p3s = 0;
-    this->_payload.structure.p4s = 0;
-    this->_payload.structure.p5s = 0;
-    this->_payload.structure.p6s = 0;
-
-    // Switches
-    this->_payload.structure.s1 = 0;
-    this->_payload.structure.s2 = 0;
-    this->_payload.structure.s3 = 0;
-    this->_payload.structure.s4 = 0;
-    this->_payload.structure.s5 = 0;
-
     // Ano Rotary Encoder - Left
-    this->_payload.structure.re1_up = 0;
-    this->_payload.structure.re1_down = 0;
-    this->_payload.structure.re1_left = 0;
-    this->_payload.structure.re1_right = 0;
-    this->_payload.structure.re1_center = 0;
-
-    this->_payload.structure.re1_pos_low = 0;
-    this->_payload.structure.re1_pos_mid_low = 0;
-    this->_payload.structure.re1_pos_mid_high = 0;
     this->_payload.structure.re1_pos_high = 0;
+    this->_payload.structure.re1_pos_mid_high = 0;
+    this->_payload.structure.re1_pos_mid_low = 0;
+    this->_payload.structure.re1_pos_low = 0;
 
     // Ano Rotary Encoder - Right
-    this->_payload.structure.re2_up = 0;
-    this->_payload.structure.re2_down = 0;
-    this->_payload.structure.re2_left = 0;
-    this->_payload.structure.re2_right = 0;
-    this->_payload.structure.re2_center = 0;
-
     this->_payload.structure.re2_pos_low = 0;
     this->_payload.structure.re2_pos_mid_low = 0;
     this->_payload.structure.re2_pos_mid_high = 0;
     this->_payload.structure.re2_pos_high = 0;
+
+    this->_payload.structure.switches_state_1 = 0;
+    this->_payload.structure.switches_state_2 = 0;
 }
 
 
@@ -85,51 +64,50 @@ void Tx::setPotentiometers(uint8_t p1, uint8_t p2, uint8_t p3, uint8_t p4, uint8
     this->_payload.structure.p6 = p6;
 }
 
-void Tx::setPotentiometerSwitches(uint8_t p1s, uint8_t p2s, uint8_t p3s, uint8_t p4s, uint8_t p5s, uint8_t p6s) {
-    this->_payload.structure.p1s = p1s;
-    this->_payload.structure.p2s = p2s;
-    this->_payload.structure.p3s = p3s;
-    this->_payload.structure.p4s = p4s;
-    this->_payload.structure.p5s = p5s;
-    this->_payload.structure.p6s = p6s;
-}
+void Tx::setSwitchesPushButtons(uint16_t pin_state_encoders, uint16_t pin_state_switches) {
+    bool switchStatuses[15] = {
+        // Store the current switches
+        (pin_state_switches & (1 << _config.button_switch_1)) != 0,
+        (pin_state_switches & (1 << _config.button_switch_2)) != 0,
+        (pin_state_switches & (1 << _config.button_switch_3)) != 0,
+        (pin_state_switches & (1 << _config.button_switch_4)) != 0,
+        (pin_state_switches & (1 << _config.button_switch_5)) != 0,
 
-void Tx::setSwitches(uint8_t s1, uint8_t s2, uint8_t s3, uint8_t s4, uint8_t s5) {
-    this->_payload.structure.s1 = s1;
-    this->_payload.structure.s2 = s2;
-    this->_payload.structure.s3 = s3;
-    this->_payload.structure.s4 = s4;
-    this->_payload.structure.s5 = s5;
-}
+        // Rotary Encoder - Left
+        (pin_state_encoders & (1 << _config.rotary_encoder_1_up)) != 0,
+        (pin_state_encoders & (1 << _config.rotary_encoder_1_down)) != 0,
+        (pin_state_encoders & (1 << _config.rotary_encoder_1_left)) != 0,
+        (pin_state_encoders & (1 << _config.rotary_encoder_1_right)) != 0,
+        (pin_state_encoders & (1 << _config.rotary_encoder_1_center)) != 0,
 
-void Tx::setAnoRotaryEncoderLeft(uint8_t up, uint8_t down, uint8_t left, uint8_t right, uint8_t center) {
-    this->_payload.structure.re1_up = up;
-    this->_payload.structure.re1_down = down;
-    this->_payload.structure.re1_left = left;
-    this->_payload.structure.re1_right = right;
-    this->_payload.structure.re1_center = center;
+        // Rotary Encoder - Right
+        (pin_state_encoders & (1 << _config.rotary_encoder_2_up)) != 0,
+        (pin_state_encoders & (1 << _config.rotary_encoder_2_down)) != 0,
+        (pin_state_encoders & (1 << _config.rotary_encoder_2_left)) != 0,
+        (pin_state_encoders & (1 << _config.rotary_encoder_2_right)) != 0,
+        (pin_state_encoders & (1 << _config.rotary_encoder_2_center)) != 0
+    };
+
+    // Encode switch statuses into two bytes
+    uint16_t switches_state = Tx::encodeSwitchStatusesToByte(switchStatuses, 15);
+
+    // Extract the lower and upper bytes
+    this->_payload.structure.switches_state_1 = (switches_state & 0xFF);
+    this->_payload.structure.switches_state_2 = ((switches_state >> 8) & 0xFF);
 }
 
 void Tx::setAnoRotaryEncoderLeftPosition(uint8_t low, uint8_t mid_low, uint8_t mid_high, uint8_t high) {
-    this->_payload.structure.re1_pos_low = low;
-    this->_payload.structure.re1_pos_mid_low = mid_low;
-    this->_payload.structure.re1_pos_mid_high = mid_high;
     this->_payload.structure.re1_pos_high = high;
-}
-
-void Tx::setAnoRotaryEncoderRight(uint8_t up, uint8_t down, uint8_t left, uint8_t right, uint8_t center) {
-    this->_payload.structure.re2_up = up;
-    this->_payload.structure.re2_down = down;
-    this->_payload.structure.re2_left = left;
-    this->_payload.structure.re2_right = right;
-    this->_payload.structure.re2_center = center;
+    this->_payload.structure.re1_pos_mid_high = mid_high;
+    this->_payload.structure.re1_pos_mid_low = mid_low;
+    this->_payload.structure.re1_pos_low = low;
 }
 
 void Tx::setAnoRotaryEncoderRightPosition(uint8_t low, uint8_t mid_low, uint8_t mid_high, uint8_t high) {
-    this->_payload.structure.re2_pos_low = low;
-    this->_payload.structure.re2_pos_mid_low = mid_low;
-    this->_payload.structure.re2_pos_mid_high = mid_high;
     this->_payload.structure.re2_pos_high = high;
+    this->_payload.structure.re2_pos_mid_high = mid_high;
+    this->_payload.structure.re2_pos_mid_low = mid_low;
+    this->_payload.structure.re2_pos_low = low;
 }
 
 int Tx::getAnoRotaryEncoderPosition(
