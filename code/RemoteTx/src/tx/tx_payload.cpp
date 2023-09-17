@@ -29,16 +29,12 @@ void Tx::defaultValues() {
     this->_payload.structure.p6 = 0;
 
     // Ano Rotary Encoder - Left
-    this->_payload.structure.re1_pos_high = 0;
-    this->_payload.structure.re1_pos_mid_high = 0;
-    this->_payload.structure.re1_pos_mid_low = 0;
-    this->_payload.structure.re1_pos_low = 0;
+    this->_payload.structure.re1_byte_1 = 0;
+    this->_payload.structure.re1_byte_2 = 0;
 
     // Ano Rotary Encoder - Right
-    this->_payload.structure.re2_pos_low = 0;
-    this->_payload.structure.re2_pos_mid_low = 0;
-    this->_payload.structure.re2_pos_mid_high = 0;
-    this->_payload.structure.re2_pos_high = 0;
+    this->_payload.structure.re2_byte_1 = 0;
+    this->_payload.structure.re2_byte_2 = 0;
 
     this->_payload.structure.switches_state_1 = 0;
     this->_payload.structure.switches_state_2 = 0;
@@ -96,42 +92,34 @@ void Tx::setSwitchesPushButtons(uint16_t pin_state_encoders, uint16_t pin_state_
     this->_payload.structure.switches_state_2 = ((switches_state >> 8) & 0xFF);
 }
 
-void Tx::setAnoRotaryEncoderLeftPosition(uint8_t low, uint8_t mid_low, uint8_t mid_high, uint8_t high) {
-    this->_payload.structure.re1_pos_high = high;
-    this->_payload.structure.re1_pos_mid_high = mid_high;
-    this->_payload.structure.re1_pos_mid_low = mid_low;
-    this->_payload.structure.re1_pos_low = low;
+void Tx::setAnoRotaryEncoderLeftPosition(uint8_t byte_1, uint8_t byte_2) {
+    this->_payload.structure.re1_byte_1 = byte_1;
+    this->_payload.structure.re1_byte_2 = byte_2;
 }
 
-void Tx::setAnoRotaryEncoderRightPosition(uint8_t low, uint8_t mid_low, uint8_t mid_high, uint8_t high) {
-    this->_payload.structure.re2_pos_high = high;
-    this->_payload.structure.re2_pos_mid_high = mid_high;
-    this->_payload.structure.re2_pos_mid_low = mid_low;
-    this->_payload.structure.re2_pos_low = low;
+void Tx::setAnoRotaryEncoderRightPosition(uint8_t byte_1, uint8_t byte_2) {
+    this->_payload.structure.re2_byte_1 = byte_1;
+    this->_payload.structure.re2_byte_2 = byte_2;
 }
 
-int Tx::getAnoRotaryEncoderPosition(
-    uint8_t high, uint8_t mid_high, uint8_t mid_low, uint8_t low
+int16_t Tx::getAnoRotaryEncoderPosition(
+    uint8_t byte_1, uint8_t byte_2
 ) {
     // Reconstruct the int value from the stored bytes
-    return  (high << 24) | (mid_high << 16) | (mid_low << 8) | low;
+    return (int16_t)((byte_1 << 8) | byte_2);
 }
 
-int Tx::getLeftAnoRotaryEncoderPosition() {
+int16_t Tx::getLeftAnoRotaryEncoderPosition() {
     return Tx::getAnoRotaryEncoderPosition(
-        this->_payload.structure.re1_pos_high,
-        this->_payload.structure.re1_pos_mid_high,
-        this->_payload.structure.re1_pos_mid_low,
-        this->_payload.structure.re1_pos_low
+        this->_payload.structure.re1_byte_1,
+        this->_payload.structure.re1_byte_2
     );
 }
 
-int Tx::getRightAnoRotaryEncoderPosition() {
+int16_t Tx::getRightAnoRotaryEncoderPosition() {
     return Tx::getAnoRotaryEncoderPosition(
-        this->_payload.structure.re2_pos_high,
-        this->_payload.structure.re2_pos_mid_high,
-        this->_payload.structure.re2_pos_mid_low,
-        this->_payload.structure.re2_pos_low
+        this->_payload.structure.re2_byte_1,
+        this->_payload.structure.re2_byte_2
     );
 }
 

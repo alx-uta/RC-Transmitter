@@ -163,6 +163,10 @@ class Config {
         uint8_t pot_out_min;
         uint8_t pot_out_max;
 
+        // Rotary encoders
+        int encoder_min = -32768;
+        int encoder_max = 32768;
+
         // @todo: allow a public function to change the config for: 
         // buttons, switches, rotary encoders, potentiometers, joysticks
 	private:

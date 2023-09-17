@@ -67,10 +67,10 @@ BatteryIcon _RX_BATTERY(
 
 // Rotary Encoder - Display Position
 DisplayNumber _DISPLAY_POSITION_LEFT(
-    _RX_CONFIG, tft, 25, 205
+    _RX_CONFIG, tft, 37, 205
 );
 DisplayNumber _DISPLAY_POSITION_RIGHT(
-    _RX_CONFIG, tft, 203, 205
+    _RX_CONFIG, tft, 217, 205
 );
 
 // Joysticks
@@ -183,7 +183,7 @@ Rx _RX(
     _S5
 );
 
-const int _payload_size = 21;
+const int _payload_size = 17;
 uint8_t _payload[_payload_size];
 
 /**

@@ -8,16 +8,17 @@
 
 #include "rx.hpp"
 
-int Rx::getAnoRotaryEncoderPosition(
-    uint8_t high, uint8_t mid_high, uint8_t mid_low, uint8_t low
+int16_t Rx::getAnoRotaryEncoderPosition(
+    uint8_t byte_1, uint8_t byte_2
 ) {
-    // Check if any of the input bytes are outside the valid range (0-255)
-    if (high > 255 || mid_high > 255 || mid_low > 255 || low > 255) {
-        return 0; // Data is corrupted, return 0
+    // Reconstruct the int16_t value from the stored bytes
+    int16_t reconstructed_value = (int16_t)((byte_1 << 8) | byte_2);
+
+    if (reconstructed_value >= Rx::rotary_min && reconstructed_value <= Rx::rotary_max) {
+        return reconstructed_value;
     }
-    
-    // Reconstruct the int value from the stored bytes
-    return  (high << 24) | (mid_high << 16) | (mid_low << 8) | low;
+
+    return 0;
 }
 
 void Rx::decodeByteToSwitchStatuses(uint16_t encodedByte, bool switchStatuses[], int numSwitches) {

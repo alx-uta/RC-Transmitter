@@ -42,14 +42,14 @@ public:
 
     void setPotentiometers(uint8_t p1, uint8_t p2, uint8_t p3, uint8_t p4, uint8_t p5, uint8_t p6);
     void setSwitchesPushButtons(uint16_t pin_state_encoders, uint16_t pin_state_switches);
-    void setAnoRotaryEncoderLeftPosition(uint8_t low, uint8_t mid_low, uint8_t mid_high, uint8_t high);
-    void setAnoRotaryEncoderRightPosition(uint8_t low, uint8_t mid_low, uint8_t mid_high, uint8_t high);
-    
+    void setAnoRotaryEncoderLeftPosition(uint8_t byte_1, uint8_t byte_2);
+    void setAnoRotaryEncoderRightPosition(uint8_t byte_1, uint8_t byte_2);
+
     int leftAnoRotaryEncoderPosition = 0;
     int rightAnoRotaryEncoderPosition = 0;
-    int getAnoRotaryEncoderPosition(uint8_t high, uint8_t mid_high, uint8_t mid_low, uint8_t low);
-    int getLeftAnoRotaryEncoderPosition();
-    int getRightAnoRotaryEncoderPosition();
+    int16_t getAnoRotaryEncoderPosition(uint8_t byte_1, uint8_t byte_2);
+    int16_t getLeftAnoRotaryEncoderPosition();
+    int16_t getRightAnoRotaryEncoderPosition();
     uint16_t encodeSwitchStatusesToByte(bool switchStatuses[], int numSwitches);
     void decodeByteToSwitchStatuses(uint16_t encodedByte, bool switchStatuses[], int numSwitches);
 
@@ -74,16 +74,12 @@ public:
         uint8_t p6;
 
         // Split re1_pos into individual bytes
-        uint8_t re1_pos_high;
-        uint8_t re1_pos_mid_high;
-        uint8_t re1_pos_mid_low;
-        uint8_t re1_pos_low;
+        uint8_t re1_byte_1;
+        uint8_t re1_byte_2;
 
         // Split re2_pos into individual bytes
-        uint8_t re2_pos_high;
-        uint8_t re2_pos_mid_high;
-        uint8_t re2_pos_mid_low;
-        uint8_t re2_pos_low;
+        uint8_t re2_byte_1;
+        uint8_t re2_byte_2;
 
         uint8_t switches_state_1;
         uint8_t switches_state_2;
@@ -91,7 +87,7 @@ public:
 
     typedef union btPacket_t {
         package structure;
-        uint8_t byteArray[21];
+        uint8_t byteArray[17];
     };
 
     btPacket_t _payload;

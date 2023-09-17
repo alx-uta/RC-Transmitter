@@ -192,30 +192,28 @@ void Tx::potentiometers() {
 void Tx::readMCP23S17() {
     uint16_t pin_state_encoders = _rotaryRead.read16();
 
-    // Get the encoder position
-    Tx::leftAnoRotaryEncoderPosition -= _leftRotary.encoderDirection(
-        (pin_state_encoders & (1 << _config.rotary_encoder_1_enc_b)) != 0,
-        (pin_state_encoders & (1 << _config.rotary_encoder_1_enc_a)) != 0
-    );
+    // Get and set the encoder position
+    if (Tx::leftAnoRotaryEncoderPosition >= _config.encoder_min && Tx::leftAnoRotaryEncoderPosition <= _config.encoder_max) {
+        Tx::leftAnoRotaryEncoderPosition -= _leftRotary.encoderDirection(
+            (pin_state_encoders & (1 << _config.rotary_encoder_1_enc_b)) != 0,
+            (pin_state_encoders & (1 << _config.rotary_encoder_1_enc_a)) != 0
+        );
 
-    Tx::rightAnoRotaryEncoderPosition -= _rightRotary.encoderDirection(
-        (pin_state_encoders & (1 << _config.rotary_encoder_2_enc_b)) != 0,
-        (pin_state_encoders & (1 << _config.rotary_encoder_2_enc_a)) != 0
-    );
+        Tx::rightAnoRotaryEncoderPosition -= _rightRotary.encoderDirection(
+            (pin_state_encoders & (1 << _config.rotary_encoder_2_enc_b)) != 0,
+            (pin_state_encoders & (1 << _config.rotary_encoder_2_enc_a)) != 0
+        );
+    }
 
     // Update the encoder position
     Tx::setAnoRotaryEncoderLeftPosition(
-        (uint8_t)(Tx::leftAnoRotaryEncoderPosition),
         (uint8_t)(Tx::leftAnoRotaryEncoderPosition >> 8),
-        (uint8_t)(Tx::leftAnoRotaryEncoderPosition >> 16),
-        (uint8_t)(Tx::leftAnoRotaryEncoderPosition >> 24)
+        (uint8_t)Tx::leftAnoRotaryEncoderPosition
     );
 
     Tx::setAnoRotaryEncoderRightPosition(
-        (uint8_t)(Tx::rightAnoRotaryEncoderPosition),
         (uint8_t)(Tx::rightAnoRotaryEncoderPosition >> 8),
-        (uint8_t)(Tx::rightAnoRotaryEncoderPosition >> 16),
-        (uint8_t)(Tx::rightAnoRotaryEncoderPosition >> 24)
+        (uint8_t)Tx::rightAnoRotaryEncoderPosition
     );
 
     // pin_state_encoders

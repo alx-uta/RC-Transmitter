@@ -67,7 +67,7 @@ class Rx {
     void updateTftRemoteTX();
 
     // Utils
-    int getAnoRotaryEncoderPosition(uint8_t high, uint8_t mid_high, uint8_t mid_low, uint8_t low);
+    int16_t getAnoRotaryEncoderPosition(uint8_t byte_1, uint8_t byte_2);
     void decodeByteToSwitchStatuses(uint16_t encodedByte, bool switchStatuses[], int numSwitches);
     uint16_t combineBytes(uint8_t byte1, uint8_t byte2);
 
@@ -75,7 +75,7 @@ class Rx {
 
     // Payload
     typedef struct package {
-        // Set the sender identifier
+        // Set the sender identifier number
         uint8_t sender; // left-right
 
         // Left Joystick
@@ -95,16 +95,12 @@ class Rx {
         uint8_t p6;
 
         // Split re1_pos into individual bytes
-        uint8_t re1_pos_high;
-        uint8_t re1_pos_mid_high;
-        uint8_t re1_pos_mid_low;
-        uint8_t re1_pos_low;
+        uint8_t re1_byte_1;
+        uint8_t re1_byte_2;
 
         // Split re2_pos into individual bytes
-        uint8_t re2_pos_high;
-        uint8_t re2_pos_mid_high;
-        uint8_t re2_pos_mid_low;
-        uint8_t re2_pos_low;
+        uint8_t re2_byte_1;
+        uint8_t re2_byte_2;
 
         uint8_t switches_state_1;
         uint8_t switches_state_2;
@@ -112,7 +108,7 @@ class Rx {
 
     typedef union btPacket_t {
         package structure;
-        uint8_t byteArray[21];
+        uint8_t byteArray[17];
     };
     package payload;
 
@@ -156,6 +152,10 @@ class Rx {
     Switch& _S3;
     Switch& _S4;
     Switch& _S5;
+
+    // Rotary Encoders
+    int rotary_min = -32768;
+    int rotary_max = 32768;
 };
 
 #endif  // RX_HPP

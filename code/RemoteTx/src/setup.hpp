@@ -71,9 +71,6 @@ void setFlag(void) {
 void SX1280_setup() {
     int state = radio.beginGFSK();
 
-    array_size = sizeof(_TX._payload.byteArray);
-    radio.implicitHeader(array_size);
-
     #if ENABLE_SERIAL_PRINT
         #if ENABLE_RADIO_LIB_DEBUG
             if (state == RADIOLIB_ERR_NONE) {
@@ -86,18 +83,50 @@ void SX1280_setup() {
         #endif
     #endif
 
-    // @todo: run a check for each state
     state = radio.setOutputPower(SX1280_OUTPUT_POWER);
+    #if ENABLE_RADIO_LIB_DEBUG
+        Serial.print("setOutputPower:");Serial.println(state);
+    #endif
+
     state = radio.setGainControl(SX1280_GAIN_CONTROL);
+    #if ENABLE_RADIO_LIB_DEBUG
+        Serial.print("setGainControl:");Serial.println(state);
+    #endif
 
     state = radio.setFrequency(SX1280_FREQUENCY);
+    #if ENABLE_RADIO_LIB_DEBUG
+        Serial.print("setFrequency:");Serial.println(state);
+    #endif
+
     state = radio.setFrequencyDeviation(SX1280_FREQUENCY_DEVIATION);
+    #if ENABLE_RADIO_LIB_DEBUG
+        Serial.print("setFrequencyDeviation:");Serial.println(state);
+    #endif
+
     state = radio.setBitRate(SX1280_BIT_RATE);
-    state = radio.setCodingRate(SX1280_CODING_RATE);
+    #if ENABLE_RADIO_LIB_DEBUG
+        Serial.print("setBitRate:");Serial.println(state);
+    #endif
+
     state = radio.setDataShaping(SX1280_DATA_SHAPING);
+    #if ENABLE_RADIO_LIB_DEBUG
+        Serial.print("setDataShaping:");Serial.println(state);
+    #endif
+
     state = radio.setCRC(SX1280_CRC_VALUE);
-    state = radio.setSyncWord(SX1280_SYNC_WORD, 4);
+    #if ENABLE_RADIO_LIB_DEBUG
+        Serial.print("setCRC:");Serial.println(state);
+    #endif
+
+    state = radio.setSyncWord(SX1280_SYNC_WORD, SX1280_SYNC_WORD_LEN);
+    #if ENABLE_RADIO_LIB_DEBUG
+        Serial.print("setSyncWord:");Serial.println(state);
+    #endif
+
     state = radio.setPreambleLength(SX1280_PREAMBLE_LENGTH);
+    #if ENABLE_RADIO_LIB_DEBUG
+        Serial.print("setPreambleLength:");Serial.println(state);
+    #endif
 
     #if ENABLE_SERIAL_PRINT
         #if ENABLE_RADIO_LIB_DEBUG

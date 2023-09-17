@@ -28,13 +28,13 @@ void DisplayNumber::update(int number) {
     DisplayNumber::_widget_created = true;
 
     // Calculate the number of digits
-    int numDigits = max(8, int(log10(abs(number)) + 1));
+    int numDigits = max(6, int(log10(abs(number)) + 1));
 
     // Determine the width of each digit display area
     int digitWidth = 12;
 
     // Calculate the total width of the display area
-    int displayWidth = digitWidth * 8;
+    int displayWidth = digitWidth * 6;
 
     // Calculate the X-coordinate to center the number
     int centerX = DisplayNumber::_x + (displayWidth - numDigits * digitWidth) / 2;
@@ -44,12 +44,12 @@ void DisplayNumber::update(int number) {
 
     // Print the new number
     _tft.setCursor(centerX, DisplayNumber::_y);
-    if (numDigits <= 8) {
+    if (numDigits <= 6) {
       if (number < 0) {
         _tft.print("-"); // Print the minus sign
-        _tft.printf("%07d", abs(number)); // Display the absolute value with leading zeros
+        _tft.printf("%05d", abs(number)); // Display the absolute value with leading zeros
       } else {
-        _tft.printf("%08d", number); // Display with leading zeros
+        _tft.printf("%06d", number); // Display with leading zeros
       }
     } else {
       _tft.printf("%d", number); // Display without leading zeros

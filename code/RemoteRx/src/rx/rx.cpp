@@ -143,19 +143,15 @@ void Rx::updateTftRemoteTX() {
      */
     _DISPLAY_POSITION_LEFT.update(
         Rx::getAnoRotaryEncoderPosition(
-            Rx::_payload.structure.re1_pos_high,
-            Rx::_payload.structure.re1_pos_mid_high,
-            Rx::_payload.structure.re1_pos_mid_low,
-            Rx::_payload.structure.re1_pos_low
+            Rx::_payload.structure.re1_byte_1,
+            Rx::_payload.structure.re1_byte_2
         )
     );
 
     _DISPLAY_POSITION_RIGHT.update(
         Rx::getAnoRotaryEncoderPosition(
-            Rx::_payload.structure.re2_pos_high,
-            Rx::_payload.structure.re2_pos_mid_high,
-            Rx::_payload.structure.re2_pos_mid_low,
-            Rx::_payload.structure.re2_pos_low
+            Rx::_payload.structure.re2_byte_1,
+            Rx::_payload.structure.re2_byte_2
         )
     );
 
