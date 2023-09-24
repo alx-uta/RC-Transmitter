@@ -5,7 +5,7 @@ Authors:
 - Marian Uta
 - Alex Heisler
 
-# Project Status
+# Project Status - WIP
 - [https://microknot.dev/rc-transmitter-project-status/](https://microknot.dev/rc-transmitter-project-status/)
 
 ---
