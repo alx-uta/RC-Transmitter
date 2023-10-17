@@ -15,6 +15,12 @@
 #define ENABLE_RADIO_LIB_DEBUG  false
 
 /**
+ * Battery
+ */
+int BATTERY_MIN = 1900; // 3.5v
+int BATTERY_MAX = 2315; // 4.2v
+
+/**
  * SX1280
  */
 

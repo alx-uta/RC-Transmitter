@@ -31,7 +31,6 @@
 #include "src/init.hpp"
 #include "src/setup.hpp"
 
-
 /**
 * We'll use core:0 for TFT update and RX hopping
 */
@@ -40,11 +39,16 @@ void func_updateTFT( void * pvParameters ){
         // TFT Update
         _RX.updateTftRemoteTX();
 
+        // Battery check
+        _RX.readBatteryPercentage(
+            BATTERY_MIN, BATTERY_MAX
+        );
+
         /**
          * Radio Hopping
          */
         rxHopping();
-
+  
         feedTheDog();
     }
 }

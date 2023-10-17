@@ -31,9 +31,14 @@ void joysticksDriftMiddleValue() {
   const int numJoysticks = 2; // Number of joysticks
 
   // Define the pin configurations for each joystick [X, Y]
-  int joystickPins[numJoysticks][2] = {
-    {TX_CONFIG.LEFT_JOYSTICK_X, TX_CONFIG.LEFT_JOYSTICK_Y},
-    {TX_CONFIG.RIGHT_JOYSTICK_X, TX_CONFIG.RIGHT_JOYSTICK_Y}
+  int joystickPins_1[numJoysticks][2] = {
+    {TX_CONFIG.LEFT_JOYSTICK_X_1, TX_CONFIG.LEFT_JOYSTICK_Y_1},
+    {TX_CONFIG.RIGHT_JOYSTICK_X_1, TX_CONFIG.RIGHT_JOYSTICK_Y_1}
+  };
+
+  int joystickPins_2[numJoysticks][2] = {
+    {TX_CONFIG.LEFT_JOYSTICK_X_2, TX_CONFIG.LEFT_JOYSTICK_Y_2},
+    {TX_CONFIG.RIGHT_JOYSTICK_X_2, TX_CONFIG.RIGHT_JOYSTICK_Y_2}
   };
 
   long total_values[numJoysticks][2] = {}; // [total_X, total_Y]
@@ -42,8 +47,12 @@ void joysticksDriftMiddleValue() {
 
   for (int i = 0; i < calibrationReadings; i++) {
     for (int j = 0; j < numJoysticks; j++) {
-      int reading_X = joystick.analogRead(joystickPins[j][0]);
-      int reading_Y = joystick.analogRead(joystickPins[j][1]);
+      int reading_X = (
+        joystick.analogRead(joystickPins_1[j][0])+joystick.analogRead(joystickPins_2[j][0])
+      ) / 2;
+      int reading_Y = (
+        joystick.analogRead(joystickPins_1[j][1])+joystick.analogRead(joystickPins_2[j][1])
+      ) / 2;
 
       total_values[j][0] += reading_X;
       total_values[j][1] += reading_Y;
@@ -94,8 +103,12 @@ void leftJoystickMin() {
   int y_min = max_value;
 
   for (int i = 0; i < calibrationReadings; i++) {
-    int reading_X = joystick.analogRead(TX_CONFIG.LEFT_JOYSTICK_X);
-    int reading_Y = joystick.analogRead(TX_CONFIG.LEFT_JOYSTICK_Y);
+    int reading_X = (
+        joystick.analogRead(TX_CONFIG.LEFT_JOYSTICK_X_1) + joystick.analogRead(TX_CONFIG.LEFT_JOYSTICK_X_2)
+    )/2;
+    int reading_Y = (
+        joystick.analogRead(TX_CONFIG.LEFT_JOYSTICK_Y_1) + joystick.analogRead(TX_CONFIG.LEFT_JOYSTICK_Y_2)
+    )/2;
 
     x_min = min(x_min, reading_X);
     y_min = min(y_min, reading_Y);
@@ -117,8 +130,12 @@ void leftJoystickMax() {
   int y_max = 0;
 
   for (int i = 0; i < calibrationReadings; i++) {
-    int reading_X = joystick.analogRead(TX_CONFIG.LEFT_JOYSTICK_X);
-    int reading_Y = joystick.analogRead(TX_CONFIG.LEFT_JOYSTICK_Y);
+    int reading_X = (
+        joystick.analogRead(TX_CONFIG.LEFT_JOYSTICK_X_1)+joystick.analogRead(TX_CONFIG.LEFT_JOYSTICK_X_2)
+    )/2;
+    int reading_Y = (
+        joystick.analogRead(TX_CONFIG.LEFT_JOYSTICK_Y_1)+joystick.analogRead(TX_CONFIG.LEFT_JOYSTICK_Y_2)
+    )/2;
 
     x_max = max(x_max, reading_X);
     y_max = max(y_max, reading_Y);
@@ -141,8 +158,12 @@ void rightJoystickMin() {
   int y_min = max_value;
 
   for (int i = 0; i < calibrationReadings; i++) {
-    int reading_X = joystick.analogRead(TX_CONFIG.RIGHT_JOYSTICK_X);
-    int reading_Y = joystick.analogRead(TX_CONFIG.RIGHT_JOYSTICK_Y);
+    int reading_X = (
+        joystick.analogRead(TX_CONFIG.RIGHT_JOYSTICK_X_1)+joystick.analogRead(TX_CONFIG.RIGHT_JOYSTICK_X_2)
+    )/2;
+    int reading_Y = (
+        joystick.analogRead(TX_CONFIG.RIGHT_JOYSTICK_Y_1)+joystick.analogRead(TX_CONFIG.RIGHT_JOYSTICK_Y_2)
+    )/2;
 
     x_min = min(x_min, reading_X);
     y_min = min(y_min, reading_Y);
@@ -164,8 +185,12 @@ void rightJoystickMax() {
   int y_max = 0;
 
   for (int i = 0; i < calibrationReadings; i++) {
-    int reading_X = joystick.analogRead(TX_CONFIG.RIGHT_JOYSTICK_X);
-    int reading_Y = joystick.analogRead(TX_CONFIG.RIGHT_JOYSTICK_Y);
+    int reading_X = (
+        joystick.analogRead(TX_CONFIG.RIGHT_JOYSTICK_X_1)+joystick.analogRead(TX_CONFIG.RIGHT_JOYSTICK_X_2)
+    )/2;
+    int reading_Y = (
+        joystick.analogRead(TX_CONFIG.RIGHT_JOYSTICK_Y_1)+joystick.analogRead(TX_CONFIG.RIGHT_JOYSTICK_Y_2)
+    )/2;
 
     x_max = max(x_max, reading_X);
     y_max = max(y_max, reading_Y);

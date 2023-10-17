@@ -191,3 +191,13 @@ void Rx::updateTftRemoteTX() {
         decoded_switch_statuses[14]
     );
 }
+
+void Rx::readBatteryPercentage(int BATTERY_MIN, int BATTERY_MAX) {
+    _TX_BATTERY.update(
+        constrain(
+            map(
+                analogRead(_config.VOLTAGE_MONITOR_PIN), BATTERY_MIN, BATTERY_MAX, 0, 100
+            ), 0, 100
+        )
+    );
+}

@@ -124,10 +124,17 @@ class Config {
         /**
          * Joysticks
          */
-        uint8_t LEFT_JOYSTICK_X =  0;
-        uint8_t LEFT_JOYSTICK_Y =  1;
-        uint8_t RIGHT_JOYSTICK_X = 2;
-        uint8_t RIGHT_JOYSTICK_Y = 3;
+        uint8_t LEFT_JOYSTICK_X_1 =  0;
+        uint8_t LEFT_JOYSTICK_X_2 =  1;
+
+        uint8_t LEFT_JOYSTICK_Y_1 =  2;
+        uint8_t LEFT_JOYSTICK_Y_2 =  3;
+
+        uint8_t RIGHT_JOYSTICK_X_1 = 4;
+        uint8_t RIGHT_JOYSTICK_X_2 = 5;
+
+        uint8_t RIGHT_JOYSTICK_Y_1 = 6;
+        uint8_t RIGHT_JOYSTICK_Y_2 = 7;
 
         // Joystick General
         uint8_t joystick_default_value;

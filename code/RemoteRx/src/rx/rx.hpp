@@ -73,6 +73,8 @@ class Rx {
 
     float valRound(float val);
 
+    void readBatteryPercentage(int BATTERY_MIN, int BATTERY_MAX);
+
     // Payload
     typedef struct package {
         // Set the sender identifier number

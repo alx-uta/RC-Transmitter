@@ -1893,7 +1893,9 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <part name="JST_CONNECTOR" library="0532610671" deviceset="0532610671" device=""/>
 <part name="J1" library="SparkFun-Connectors" library_urn="urn:adsk.eagle:library:513" deviceset="CONN_06" device="SILK_FEMALE_PTH" package3d_urn="urn:adsk.eagle:package:38009/1"/>
 <part name="C1" library="SparkFun-Capacitors" library_urn="urn:adsk.eagle:library:510" deviceset="10UF" device="-0805-10V-10%" package3d_urn="urn:adsk.eagle:package:37429/1" value="10uF"/>
+<part name="C3" library="SparkFun-Capacitors" library_urn="urn:adsk.eagle:library:510" deviceset="10UF" device="-0805-10V-10%" package3d_urn="urn:adsk.eagle:package:37429/1" value="10uF"/>
 <part name="C2" library="SparkFun-Capacitors" library_urn="urn:adsk.eagle:library:510" deviceset="10UF" device="-0805-10V-10%" package3d_urn="urn:adsk.eagle:package:37429/1" value="10uF"/>
+<part name="C4" library="SparkFun-Capacitors" library_urn="urn:adsk.eagle:library:510" deviceset="10UF" device="-0805-10V-10%" package3d_urn="urn:adsk.eagle:package:37429/1" value="10uF"/>
 </parts>
 <sheets>
 <sheet>
@@ -1911,9 +1913,17 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <attribute name="NAME" x="-11.176" y="33.401" size="1.778" layer="95" font="vector"/>
 <attribute name="VALUE" x="-11.176" y="28.321" size="1.778" layer="96" font="vector"/>
 </instance>
-<instance part="C2" gate="G$1" x="38.1" y="30.48" smashed="yes">
+<instance part="C3" gate="G$1" x="38.1" y="30.48" smashed="yes">
 <attribute name="NAME" x="39.624" y="33.401" size="1.778" layer="95" font="vector"/>
 <attribute name="VALUE" x="39.624" y="28.321" size="1.778" layer="96" font="vector"/>
+</instance>
+<instance part="C2" gate="G$1" x="-17.78" y="30.48" smashed="yes">
+<attribute name="NAME" x="-16.256" y="33.401" size="1.778" layer="95" font="vector"/>
+<attribute name="VALUE" x="-16.256" y="28.321" size="1.778" layer="96" font="vector"/>
+</instance>
+<instance part="C4" gate="G$1" x="45.72" y="30.48" smashed="yes">
+<attribute name="NAME" x="47.244" y="33.401" size="1.778" layer="95" font="vector"/>
+<attribute name="VALUE" x="47.244" y="28.321" size="1.778" layer="96" font="vector"/>
 </instance>
 </instances>
 <busses>
@@ -1950,13 +1960,19 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <wire x1="-7.62" y1="30.48" x2="-7.62" y2="35.56" width="0.1524" layer="91"/>
 <wire x1="-7.62" y1="35.56" x2="-12.7" y2="35.56" width="0.1524" layer="91"/>
 <pinref part="C1" gate="G$1" pin="1"/>
+<wire x1="-12.7" y1="35.56" x2="-17.78" y2="35.56" width="0.1524" layer="91"/>
+<junction x="-12.7" y="35.56"/>
+<pinref part="C2" gate="G$1" pin="1"/>
 </segment>
 <segment>
 <wire x1="22.86" y1="30.48" x2="33.02" y2="30.48" width="0.1524" layer="91"/>
 <pinref part="JST_CONNECTOR" gate="G$1" pin="5"/>
 <wire x1="33.02" y1="30.48" x2="33.02" y2="35.56" width="0.1524" layer="91"/>
 <wire x1="33.02" y1="35.56" x2="38.1" y2="35.56" width="0.1524" layer="91"/>
-<pinref part="C2" gate="G$1" pin="1"/>
+<pinref part="C3" gate="G$1" pin="1"/>
+<wire x1="38.1" y1="35.56" x2="45.72" y2="35.56" width="0.1524" layer="91"/>
+<junction x="38.1" y="35.56"/>
+<pinref part="C4" gate="G$1" pin="1"/>
 </segment>
 </net>
 <net name="GND" class="0">
@@ -1977,11 +1993,17 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <pinref part="JST_CONNECTOR" gate="G$1" pin="3"/>
 <wire x1="2.54" y1="27.94" x2="-12.7" y2="27.94" width="0.1524" layer="91"/>
 <pinref part="C1" gate="G$1" pin="2"/>
+<wire x1="-12.7" y1="27.94" x2="-17.78" y2="27.94" width="0.1524" layer="91"/>
+<junction x="-12.7" y="27.94"/>
+<pinref part="C2" gate="G$1" pin="2"/>
 </segment>
 <segment>
 <pinref part="JST_CONNECTOR" gate="G$1" pin="6"/>
 <wire x1="22.86" y1="27.94" x2="38.1" y2="27.94" width="0.1524" layer="91"/>
-<pinref part="C2" gate="G$1" pin="2"/>
+<pinref part="C3" gate="G$1" pin="2"/>
+<wire x1="38.1" y1="27.94" x2="45.72" y2="27.94" width="0.1524" layer="91"/>
+<junction x="38.1" y="27.94"/>
+<pinref part="C4" gate="G$1" pin="2"/>
 </segment>
 </net>
 <net name="SIG_2" class="0">
