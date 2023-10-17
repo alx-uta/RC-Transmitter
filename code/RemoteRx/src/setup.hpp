@@ -186,7 +186,7 @@ void tft_setup() {
     );
 
     // Battery
-    _TX_BATTERY.init(65);
+    _TX_BATTERY.init(-1);
     _RX_BATTERY.init(-1);
 
     // Rotary Encoders

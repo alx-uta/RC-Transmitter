@@ -55,7 +55,7 @@ public:
 
     typedef struct package {
         // Set the sender identifier number
-        uint8_t sender; // left-right
+        uint8_t sender;
 
         // Left Joystick
         uint8_t j1x; // left-right

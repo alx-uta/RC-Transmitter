@@ -25,7 +25,7 @@ void BatteryIcon::init(int percentage) {
 }
 
 void BatteryIcon::update(int percentage) {
-    if(percentage == BatteryIcon::_old_value and !BatteryIcon::_widget_created) {
+    if (abs(percentage - BatteryIcon::_old_value) <= 2 && !BatteryIcon::_widget_created) {
         return;
     }
 
@@ -39,31 +39,22 @@ void BatteryIcon::update(int percentage) {
     int height = BatteryIcon::_width / 2;
 
     // Choose the color based on the percentage range
-    uint16_t fillColor;
-
-    if (percentage <= 0) {
-        // If percentage is 0 or negative, draw an empty battery (disabled)
-        _tft.drawRect(_x, _y, BatteryIcon::_width, height, TFT_RED);
-        return;
-    } else if (percentage <= 25) {
-        // Red for 0-25%
-        fillColor = TFT_RED;
-    } else if (percentage <= 50) {
-        // Yellow for 26-50%
-        fillColor = TFT_YELLOW;
-    } else {
-        // Green for above 50%
-        fillColor = TFT_GREEN;
-    }
+    uint16_t fillColor = TFT_GREEN;
 
     // Calculate the inner width based on the percentage
     int innerWidth = map(
         percentage, 0, 100, 0, BatteryIcon::_width - 2 * border_radius
     );
 
-    // Draw battery fill with the chosen color
+    // Clear the right portion of the battery with the background color (TFT_BLACK)
+    int clearWidth = BatteryIcon::_width - innerWidth - 4 * border_radius;
     _tft.fillRect(
-        _x + 1, _y + border_radius, innerWidth, height - 2 * border_radius, fillColor
+        _x + innerWidth + 3 * border_radius, _y + border_radius, clearWidth, height - 2 * border_radius, TFT_BLACK
+    );
+
+    // Update the battery fill with the chosen color
+    _tft.fillRect(
+        _x + 3, _y + border_radius, innerWidth, height - 2 * border_radius, fillColor
     );
 
     // Draw battery outline

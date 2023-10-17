@@ -23,6 +23,11 @@ class Config {
         uint8_t MOSI_PIN    = 13;
 
         /**
+         * Battery Voltage Monitor
+         */
+        uint8_t VOLTAGE_MONITOR_PIN  = 35;
+
+        /**
          * SX1280 Init
          */
         uint8_t SX1280_NSS  = 2;

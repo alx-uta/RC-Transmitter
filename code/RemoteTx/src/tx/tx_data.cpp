@@ -14,10 +14,10 @@
  */
 void Tx::joysticks() {
     int16_t
-        joystick_x1,
-        joystick_y1,
-        joystick_x2,
-        joystick_y2;
+        joystick_x1_1, joystick_x1_2,
+        joystick_y1_1, joystick_y1_2,
+        joystick_x2_1, joystick_x2_2,
+        joystick_y2_1, joystick_y2_2;
     uint8_t
         x1,
         y1,
@@ -28,12 +28,19 @@ void Tx::joysticks() {
         joystick_x2_map,
         joystick_y2_map;
 
-    const uint8_t joysticks_num_channels = 4;
+    const uint8_t joysticks_num_channels = 8;
     uint8_t joysticks_channels[joysticks_num_channels] = {
-        _config.LEFT_JOYSTICK_X,
-        _config.LEFT_JOYSTICK_Y,
-        _config.RIGHT_JOYSTICK_X,
-        _config.RIGHT_JOYSTICK_Y
+        _config.LEFT_JOYSTICK_X_1,
+        _config.LEFT_JOYSTICK_X_2,
+
+        _config.LEFT_JOYSTICK_Y_1,
+        _config.LEFT_JOYSTICK_Y_2,
+
+        _config.RIGHT_JOYSTICK_X_1,
+        _config.RIGHT_JOYSTICK_X_2,
+
+        _config.RIGHT_JOYSTICK_Y_1,
+        _config.RIGHT_JOYSTICK_Y_2
     };
 
     // Joysticks Values
@@ -42,14 +49,21 @@ void Tx::joysticks() {
         joysticks_channels, joysticks_num_channels, readings
     );
 
-    joystick_x1 = readings[_config.LEFT_JOYSTICK_X];
-    joystick_y1 = readings[_config.LEFT_JOYSTICK_Y];
-    joystick_x2 = readings[_config.RIGHT_JOYSTICK_X];
-    joystick_y2 = readings[_config.RIGHT_JOYSTICK_Y];
+    joystick_x1_1 = readings[_config.LEFT_JOYSTICK_X_1];
+    joystick_x1_2 = readings[_config.LEFT_JOYSTICK_X_2];
+
+    joystick_y1_1 = readings[_config.LEFT_JOYSTICK_Y_1];
+    joystick_y1_2 = readings[_config.LEFT_JOYSTICK_Y_2];
+
+    joystick_x2_1 = readings[_config.RIGHT_JOYSTICK_X_1];
+    joystick_x2_2 = readings[_config.RIGHT_JOYSTICK_X_2];
+
+    joystick_y2_1 = readings[_config.RIGHT_JOYSTICK_Y_1];
+    joystick_y2_2 = readings[_config.RIGHT_JOYSTICK_Y_2];
 
     // Left joystick
     joystick_x1_map = Tx::joystickMap(
-        joystick_x1,
+        (joystick_x1_1+joystick_x1_2)/2,
         _config.left_joystick_min_value_x + _config.left_joystick_drift_value_x,
         _config.left_joystick_max_value_x - _config.left_joystick_drift_value_x,
         _config.left_joystick_middle_value_x,
@@ -58,7 +72,7 @@ void Tx::joysticks() {
         _config.joystick_max_out
     );
     joystick_y1_map = Tx::joystickMap(
-        joystick_y1,
+        (joystick_y1_1+joystick_y1_2)/2,
         _config.left_joystick_min_value_y + _config.left_joystick_drift_value_y,
         _config.left_joystick_max_value_y - _config.left_joystick_drift_value_y,
         _config.left_joystick_middle_value_y,
@@ -69,7 +83,7 @@ void Tx::joysticks() {
 
     // Right Joystick
     joystick_x2_map = Tx::joystickMap(
-        joystick_x2,
+        (joystick_x2_1+joystick_x2_2)/2,
         _config.right_joystick_min_value_x + _config.right_joystick_drift_value_x,
         _config.right_joystick_max_value_x - _config.right_joystick_drift_value_x,
         _config.right_joystick_middle_value_x,
@@ -78,7 +92,7 @@ void Tx::joysticks() {
         _config.joystick_max_out
     );
     joystick_y2_map = Tx::joystickMap(
-        joystick_y2,
+        (joystick_y2_1+joystick_y2_2)/2,
         _config.right_joystick_min_value_y + _config.right_joystick_drift_value_y,
         _config.right_joystick_max_value_y - _config.right_joystick_drift_value_y,
         _config.right_joystick_middle_value_y,
@@ -92,13 +106,13 @@ void Tx::joysticks() {
      */
     // Left Joystick
     x1 = Tx::applyJoystickThreshold(
-        joystick_x1,
+        (joystick_x1_1+joystick_x1_2)/2,
         _config.left_joystick_middle_value_x,
         _config.left_joystick_drift_value_x,
         joystick_x1_map
     );
     y1 = Tx::applyJoystickThreshold(
-        joystick_y1,
+        (joystick_y1_1+joystick_y1_2)/2,
         _config.left_joystick_middle_value_y,
         _config.left_joystick_drift_value_y,
         joystick_y1_map
@@ -106,13 +120,13 @@ void Tx::joysticks() {
 
     // Right Joystick
     x2 = Tx::applyJoystickThreshold(
-        joystick_x2,
+        (joystick_x2_1+joystick_x2_2)/2,
         _config.right_joystick_middle_value_x,
         _config.right_joystick_drift_value_x,
         joystick_x2_map
     );
     y2 = Tx::applyJoystickThreshold(
-        joystick_y2,
+        (joystick_y2_1+joystick_y2_1)/2,
         _config.right_joystick_middle_value_y,
         _config.right_joystick_drift_value_y,
         joystick_y2_map
