@@ -25,7 +25,11 @@ void BatteryIcon::init(int percentage) {
 }
 
 void BatteryIcon::update(int percentage) {
-    if (abs(percentage - BatteryIcon::_old_value) <= 2 && !BatteryIcon::_widget_created) {
+    if (
+        (percentage == BatteryIcon::_old_value && !BatteryIcon::_widget_created) or (
+            abs(percentage - BatteryIcon::_old_value) <= 5
+        )
+    ) {
         return;
     }
 
@@ -47,9 +51,9 @@ void BatteryIcon::update(int percentage) {
     );
 
     // Clear the right portion of the battery with the background color (TFT_BLACK)
-    int clearWidth = BatteryIcon::_width - innerWidth - 4 * border_radius;
+    int clearWidth = BatteryIcon::_width - innerWidth - border_radius;
     _tft.fillRect(
-        _x + innerWidth + 3 * border_radius, _y + border_radius, clearWidth, height - 2 * border_radius, TFT_BLACK
+        _x + innerWidth + 1, _y + border_radius, clearWidth, height - 2 * border_radius, TFT_BLACK
     );
 
     // Update the battery fill with the chosen color
