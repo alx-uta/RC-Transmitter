@@ -116,4 +116,3 @@ Tx _TX(
 );
 
 uint8_t* _payload;
-int array_size;

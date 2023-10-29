@@ -131,15 +131,30 @@ void receiveData() {
         #endif
 
         #if ENABLE_DEBUG
-            // Debug the payload
-            for(int i=0; i < _payload_size; i++)
-            {
-                Serial.print(_payload[i]);
-                if(i < _payload_size - 1) {
-                    Serial.print(" : "); 
+            uint8_t current_position = 2;
+            bool data_received = false;
+            for (int i = 3; i < 16; i++) {
+                uint8_t channel = i - 2;
+                if (_RX.payload_config[i]) {
+                    uint8_t required_bytes = _RX.channels[channel-1].required_bytes;
+                    uint8_t first_byte = _payload[current_position++];
+                    uint8_t second_byte = (required_bytes == 2) ? _payload[current_position++] : 0;
+                    data_received = true;
+
+                    Serial.print("ch#");
+                    Serial.print(channel);
+                    Serial.print(":");
+                    Serial.print(first_byte);
+                    if(second_byte) {
+                        Serial.print(" ");
+                        Serial.print(second_byte);
+                    }
+                    Serial.print(" ");
                 }
             }
-            Serial.println();
+            if(data_received) {
+                Serial.println("");
+            }
         #endif
     #endif
       radio.startReceive();

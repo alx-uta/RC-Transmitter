@@ -64,11 +64,28 @@ class Rx {
     void setData(uint8_t* _payload);
     void setTXpayload(uint8_t* _payload);
 
+    void setChannel(uint8_t channel, uint8_t first_byte, uint8_t second_byte);
+
+    // Set each channel
+    void setCh1(uint8_t byte_1);
+    void setCh2(uint8_t byte_1);
+    void setCh3(uint8_t byte_1);
+    void setCh4(uint8_t byte_1);
+    void setCh5(uint8_t byte_1, uint8_t byte_2);
+    void setCh6(uint8_t byte_1, uint8_t byte_2);
+    void setCh7(uint8_t byte_1, uint8_t byte_2);
+    void setCh8(uint8_t byte_1);
+    void setCh9(uint8_t byte_1);
+    void setCh10(uint8_t byte_1);
+    void setCh11(uint8_t byte_1);
+    void setCh12(uint8_t byte_1);
+    void setCh13(uint8_t byte_1);
+
     void updateTftRemoteTX();
 
     // Utils
     int16_t getAnoRotaryEncoderPosition(uint8_t byte_1, uint8_t byte_2);
-    void decodeByteToSwitchStatuses(uint16_t encodedByte, bool switchStatuses[], int numSwitches);
+    void decodeByteToStatuses(uint16_t encodedByte, bool statuses[], int num);
     uint16_t combineBytes(uint8_t byte1, uint8_t byte2);
 
     float valRound(float val);
@@ -77,8 +94,9 @@ class Rx {
 
     // Payload
     typedef struct package {
-        // Set the sender identifier number
-        uint8_t sender; // left-right
+        // Config
+        uint8_t config_first_byte;
+        uint8_t config_second_byte;
 
         // Left Joystick
         uint8_t j1x; // left-right
@@ -109,12 +127,72 @@ class Rx {
     };
 
     typedef union btPacket_t {
-        package structure;
-        uint8_t byteArray[17];
+        package data;
+        uint8_t byteArray[18];
     };
     package payload;
-
     btPacket_t _payload;
+
+    /**
+     * TX Payload Config
+     * TX0 : Remote TX
+     * TX1 : Sensors 1
+     * TX2 : Sensors 2
+     * 
+     * CH1  : j1y - Left Joystick Up/Down
+     * CH2  : j1x - Left Joystick Left/Right
+     * CH3  : j2y - Right Joystick Up/Down
+     * CH4  : j2x - Right Joystick Left/Right
+     * CH5  : switches_state_1 + switches_state_2
+     * CH6  : re1_byte_1 + re1_byte_2
+     * CH7  : re2_byte_1 + re2_byte_2
+     * CH8  : p1
+     * CH9  : p2
+     * CH10 : p3
+     * CH11 : p4
+     * CH12 : p5
+     * CH13 : p6
+     */
+    bool payload_config[16] = {
+        0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    };
+
+    typedef struct Channel {
+        uint8_t required_bytes;
+        uint8_t default_value;
+    };
+
+    /**
+     * CH1  : j1y - Left Joystick Up/Down
+     * CH2  : j1x - Left Joystick Left/Right
+     * CH3  : j2y - Right Joystick Up/Down
+     * CH4  : j2x - Right Joystick Left/Right
+     * CH5  : switches_state_1 + switches_state_2
+     * CH6  : re1_byte_1 + re1_byte_2
+     * CH7  : re2_byte_1 + re2_byte_2
+     * CH8  : p1
+     * CH9  : p2
+     * CH10 : p3
+     * CH11 : p4
+     * CH12 : p5
+     * CH13 : p6
+     */
+    Channel channels[13] = {
+        {1, 127},
+        {1, 127},
+        {1, 127},
+        {1, 127},
+        {2, 0},
+        {2, 0},
+        {2, 0},
+        {1, 0},
+        {1, 0},
+        {1, 0},
+        {1, 0},
+        {1, 0},
+        {1, 0}
+    };
 
  private:
     Config& _config;

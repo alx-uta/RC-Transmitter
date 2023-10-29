@@ -33,8 +33,9 @@ public:
     void readMCP23S17();
     
     // Payload
-    uint8_t* getByteArray();
-    void defaultValues();
+    uint8_t* getPayload();
+    int getPayloadSize();
+    int current_payload_size;
 
     int applyJoystickThreshold(int value, int middle, int driftValue, int mappedValue);
     void setLeftJoystick(uint8_t x, uint8_t y);
@@ -48,53 +49,80 @@ public:
     int leftAnoRotaryEncoderPosition = 0;
     int rightAnoRotaryEncoderPosition = 0;
     int16_t getAnoRotaryEncoderPosition(uint8_t byte_1, uint8_t byte_2);
-    int16_t getLeftAnoRotaryEncoderPosition();
-    int16_t getRightAnoRotaryEncoderPosition();
-    uint16_t encodeSwitchStatusesToByte(bool switchStatuses[], int numSwitches);
-    void decodeByteToSwitchStatuses(uint16_t encodedByte, bool switchStatuses[], int numSwitches);
+    uint16_t encodeStatusToByte(bool statuses[], int num);
+    void decodeByteToStatus(uint16_t encodedByte, bool statuses[], int num);
+    uint16_t combineBytes(uint8_t byte1, uint8_t byte2);
+    void increasePayloadSize(uint8_t bytes);
 
-    typedef struct package {
-        // Set the sender identifier number
-        uint8_t sender;
-
-        // Left Joystick
-        uint8_t j1x; // left-right
-        uint8_t j1y; // up-down
-
-        // Right Joystick
-        uint8_t j2x; // left-right
-        uint8_t j2y; // up-down
-
-        // Potentiometers - Values
-        uint8_t p1;
-        uint8_t p2;
-        uint8_t p3;
-        uint8_t p4;
-        uint8_t p5;
-        uint8_t p6;
-
-        // Split re1_pos into individual bytes
-        uint8_t re1_byte_1;
-        uint8_t re1_byte_2;
-
-        // Split re2_pos into individual bytes
-        uint8_t re2_byte_1;
-        uint8_t re2_byte_2;
-
-        uint8_t switches_state_1;
-        uint8_t switches_state_2;
-    };
-
-    typedef union btPacket_t {
-        package structure;
-        uint8_t byteArray[17];
-    };
-
-    btPacket_t _payload;
-
+    uint16_t switches_state;
     uint8_t joystick_default_value;
 
+    typedef struct Channel {
+        uint8_t required_bytes;
+        uint8_t first_byte;
+        uint8_t second_byte;
+    };
+
+    uint8_t maximum_payload_size = 19;
+
+    /**
+     * CH1  : j1y - Left Joystick Up/Down
+     * CH2  : j1x - Left Joystick Left/Right
+     * CH3  : j2y - Right Joystick Up/Down
+     * CH4  : j2x - Right Joystick Left/Right
+     * CH5  : switches_state_1 + switches_state_2
+     * CH6  : re1_byte_1 + re1_byte_2
+     * CH7  : re2_byte_1 + re2_byte_2
+     * CH8  : p1
+     * CH9  : p2
+     * CH10 : p3
+     * CH11 : p4
+     * CH12 : p5
+     * CH13 : p6
+     */
+    Channel channels[13] = {
+        {1, joystick_default_value, 0},
+        {1, joystick_default_value, 0},
+        {1, joystick_default_value, 0},
+        {1, joystick_default_value, 0},
+        {2, 0, 0},
+        {2, 0, 0},
+        {2, 0, 0},
+        {1, 0, 0},
+        {1, 0, 0},
+        {1, 0, 0},
+        {1, 0, 0},
+        {1, 0, 0},
+        {1, 0, 0}
+    };
+    /**
+     * TX Payload Config
+     * TX0 : Remote TX
+     * TX1 : Sensors 1
+     * TX2 : Sensors 2
+     * 
+     * CH1  : j1y - Left Joystick Up/Down
+     * CH2  : j1x - Left Joystick Left/Right
+     * CH3  : j2y - Right Joystick Up/Down
+     * CH4  : j2x - Right Joystick Left/Right
+     * CH5  : switches_state_1 + switches_state_2
+     * CH6  : re1_byte_1 + re1_byte_2
+     * CH7  : re2_byte_1 + re2_byte_2
+     * CH8  : p1
+     * CH9  : p2
+     * CH10 : p3
+     * CH11 : p4
+     * CH12 : p5
+     * CH13 : p6
+     */
+    bool payload_config[16] = {
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0
+    };
+
 private:
+    int payload_size;
+
     int joystickMap(
         int current_value,
         int min_value,

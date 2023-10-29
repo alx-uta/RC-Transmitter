@@ -63,12 +63,6 @@ void setup() {
     #endif
 
     /**
-     * Set the default values and 
-     * create the structure for the payload
-     */
-    _TX.defaultValues();
-
-    /**
      * SX1280 setup
      */
     SX1280_setup();

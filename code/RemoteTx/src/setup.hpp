@@ -143,11 +143,20 @@ void SX1280_setup() {
     /**
      * Start the connexion and transmit the first package
      */
-    _payload = _TX.getByteArray();
-    array_size = sizeof(_TX._payload.byteArray);
-    state = radio.startTransmit(
-        _payload, array_size
+    uint8_t* payload_data = (uint8_t*)malloc(2);
+
+    // Add the current config to the payload
+    uint16_t config_encode = _TX.encodeStatusToByte(
+        _TX.payload_config,
+        16
     );
+    payload_data[0] = (config_encode & 0xFF);
+    payload_data[1] = (config_encode >> 8);
+
+    transmissionState = radio.startTransmit(
+        payload_data, 2
+    );
+    free(payload_data);
 }
 
 /**
@@ -158,6 +167,7 @@ void transmitData() {
     if(transmittedFlag) {
         // reset flag
         transmittedFlag = false;
+        _payload = _TX.getPayload();
 
         #if ENABLE_SERIAL_PRINT
             #if ENABLE_RADIO_LIB_DEBUG
@@ -174,26 +184,26 @@ void transmitData() {
             #endif
 
             #if ENABLE_DEBUG
-                // Debug the payload
-                _payload = _TX.getByteArray();
-                array_size = sizeof(_TX._payload.byteArray);
-                for(int i=0; i < array_size; i++)
+                // Debug the new payload
+                for(int i=0; i < _TX.current_payload_size; i++)
                 {
                     Serial.print(_payload[i]);
-                    if(i < array_size - 1) {
+                    if(i < _TX.current_payload_size - 1) {
                         Serial.print(" : "); 
                     }
                 }
-                Serial.println();
+                Serial.print(" (");
+                Serial.print(ESP.getFreeHeap());
+                Serial.println(" bytes free)"); 
+
             #endif
         #endif
 
-        _payload = _TX.getByteArray();
-        array_size = sizeof(_TX._payload.byteArray);
         transmissionState = radio.startTransmit(
-            _payload, array_size
+            _payload, _TX.current_payload_size
         );
-
+        // Free the memory
+        free(_payload);
     }
 }
 

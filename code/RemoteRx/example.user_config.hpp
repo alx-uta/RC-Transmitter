@@ -17,7 +17,7 @@
 /**
  * Battery
  */
-int BATTERY_MIN = 1900; // 3.5v
+int BATTERY_MIN = 1925; // 3.5v
 int BATTERY_MAX = 2315; // 4.2v
 
 /**

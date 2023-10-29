@@ -32,18 +32,26 @@ int Tx::joystickMap(
   }
 }
 
-uint16_t Tx::encodeSwitchStatusesToByte(bool switchStatuses[], int numSwitches) {
+uint16_t Tx::combineBytes(uint8_t byte1, uint8_t byte2) {
+  return ((uint16_t)byte2 << 8) | byte1;
+}
+
+void Tx::increasePayloadSize(uint8_t bytes) {
+    this->payload_size += bytes;
+}
+
+uint16_t Tx::encodeStatusToByte(bool statuses[], int num) {
     uint16_t encodedByte = 0;
 
-    for (int i = 0; i < numSwitches; i++) {
-        encodedByte |= (switchStatuses[i] << i);
+    for (int i = 0; i < num; i++) {
+        encodedByte |= (statuses[i] << i);
     }
 
     return encodedByte;
 }
 
-void Tx::decodeByteToSwitchStatuses(uint16_t encodedByte, bool switchStatuses[], int numSwitches) {
-  for (int i = 0; i < numSwitches; i++) {
-    switchStatuses[i] = (encodedByte >> i) & 0x01;
+void Tx::decodeByteToStatus(uint16_t encodedByte, bool statuses[], int num) {
+  for (int i = 0; i < num; i++) {
+    statuses[i] = (encodedByte >> i) & 0x01;
   }
 }

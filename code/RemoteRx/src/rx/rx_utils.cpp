@@ -21,9 +21,9 @@ int16_t Rx::getAnoRotaryEncoderPosition(
     return 0;
 }
 
-void Rx::decodeByteToSwitchStatuses(uint16_t encodedByte, bool switchStatuses[], int numSwitches) {
-  for (int i = 0; i < numSwitches; i++) {
-    switchStatuses[i] = (encodedByte >> i) & 0x01;
+void Rx::decodeByteToStatuses(uint16_t encodedByte, bool statuses[], int num) {
+  for (int i = 0; i < num; i++) {
+    statuses[i] = (encodedByte >> i) & 0x01;
   }
 }
 
