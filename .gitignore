@@ -1,0 +1,9 @@
+# General
+.DS_Store
+/build/
+.vscode
+**/user_config.hpp
+**/debug.cfg
+**/debug_custom.json
+**/esp32.svd
+code/Remote/RemoteTx/user_config.h
