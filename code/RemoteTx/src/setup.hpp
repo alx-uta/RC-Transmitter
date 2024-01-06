@@ -1,7 +1,7 @@
 /**
  * RC Transmitter – ESP32 / SX1280
  * https://github.com/alx-uta/RC-Transmitter
- * 
+ *
  * Alex Uta
  * microknot.dev
  */
@@ -118,11 +118,6 @@ void SX1280_setup() {
         Serial.print("setCRC:");Serial.println(state);
     #endif
 
-    state = radio.setSyncWord(SX1280_SYNC_WORD, SX1280_SYNC_WORD_LEN);
-    #if ENABLE_RADIO_LIB_DEBUG
-        Serial.print("setSyncWord:");Serial.println(state);
-    #endif
-
     state = radio.setPreambleLength(SX1280_PREAMBLE_LENGTH);
     #if ENABLE_RADIO_LIB_DEBUG
         Serial.print("setPreambleLength:");Serial.println(state);
@@ -189,12 +184,12 @@ void transmitData() {
                 {
                     Serial.print(_payload[i]);
                     if(i < _TX.current_payload_size - 1) {
-                        Serial.print(" : "); 
+                        Serial.print(" : ");
                     }
                 }
                 Serial.print(" (");
                 Serial.print(ESP.getFreeHeap());
-                Serial.println(" bytes free)"); 
+                Serial.println(" bytes free)");
 
             #endif
         #endif

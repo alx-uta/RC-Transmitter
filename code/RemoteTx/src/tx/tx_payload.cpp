@@ -1,12 +1,13 @@
 /**
  * RC Transmitter – ESP32 / SX1280
  * https://github.com/alx-uta/RC-Transmitter
- * 
+ *
  * Alex Uta
  * microknot.dev
  */
 
 #include "tx.hpp"
+extern bool BINDING_KEY[16];
 
 void Tx::setLeftJoystick(uint8_t x, uint8_t y) {
     // Enable or disable this channel
@@ -114,7 +115,9 @@ int16_t Tx::getAnoRotaryEncoderPosition(
 }
 
 int Tx::getPayloadSize() {
-    this->payload_size = 2;
+    // We have 2 bytes from the config
+    // and 2 more from the binding key
+    this->payload_size = 4;
     for (int i = 3; i < 16; i++) {
         if (payload_config[i]) {
             this->increasePayloadSize(this->channels[i - 3].required_bytes);
@@ -135,6 +138,11 @@ uint8_t* Tx::getPayload() {
     }
 
     uint8_t current_position = 0;
+
+    // Add the binding key to the payload
+    uint16_t binding_key_encode = this->encodeStatusToByte(BINDING_KEY, 16);
+    payload_data[current_position++] = (binding_key_encode & 0xFF);
+    payload_data[current_position++] = (binding_key_encode >> 8);
 
     // Add the current config to the payload
     uint16_t config_encode = this->encodeStatusToByte(this->payload_config, 16);
