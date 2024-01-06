@@ -1,12 +1,13 @@
 /**
  * RC Transmitter – ESP32 / SX1280
  * https://github.com/alx-uta/RC-Transmitter
- * 
+ *
  * Alex Uta
  * microknot.dev
  */
 
 #include "rx.hpp"
+extern bool BINDING_KEY[16];
 
 Rx::Rx(
     Config& config,
@@ -15,7 +16,7 @@ Rx::Rx(
     // TX/RX Battery
     BatteryIcon& TX_BATTERY,
     BatteryIcon& RX_BATTERY,
-    
+
     // Left Rotary Encoder
     DisplayNumber& DISPLAY_POSITION_LEFT,
     RotaryEncoder& ENCODER_LEFT,
@@ -27,11 +28,11 @@ Rx::Rx(
     // Left Joystick
     HorizontalSlider& LEFT_JOYSTICK_X,
     VerticalSlider& LEFT_JOYSTICK_Y,
-    
+
     // Right Joystick
     HorizontalSlider& RIGHT_JOYSTICK_X,
     VerticalSlider& RIGHT_JOYSTICK_Y,
-    
+
     // Potentiometers
     VerticalSlider& SLIDER_POT_1,
     VerticalSlider& SLIDER_POT_2,
@@ -53,7 +54,7 @@ Rx::Rx(
         // TX/RX Battery
         _TX_BATTERY(TX_BATTERY),
         _RX_BATTERY(RX_BATTERY),
-        
+
         // Left Rotary Encoder
         _DISPLAY_POSITION_LEFT(DISPLAY_POSITION_LEFT),
         _ENCODER_LEFT(ENCODER_LEFT),
@@ -65,11 +66,11 @@ Rx::Rx(
         // Left Joystick
         _LEFT_JOYSTICK_X(LEFT_JOYSTICK_X),
         _LEFT_JOYSTICK_Y(LEFT_JOYSTICK_Y),
-        
+
         // Right Joystick
         _RIGHT_JOYSTICK_X(RIGHT_JOYSTICK_X),
         _RIGHT_JOYSTICK_Y(RIGHT_JOYSTICK_Y),
-        
+
         // Potentiometers
         _SLIDER_POT_1(SLIDER_POT_1),
         _SLIDER_POT_2(SLIDER_POT_2),
@@ -93,10 +94,26 @@ Rx::Rx(
 void Rx::setData(
     uint8_t* _payload
 ) {
-    // Get the config from the first two bytes
-    uint16_t config_combined_byte = this->combineBytes(
+    // Get the binding key from the first two bytes
+    uint16_t binding_key_combined_byte = this->combineBytes(
         _payload[0],
         _payload[1]
+    );
+
+    // Decode the uint16_t
+    bool decoded_binding_key[16];
+    this->decodeByteToStatuses(binding_key_combined_byte, decoded_binding_key, 16);
+
+    for (int i = 0; i < 16; i++) {
+        if(BINDING_KEY[i] != decoded_binding_key[i]) {
+            return;
+        }
+    }
+
+    // Get the config from the next two bytes
+    uint16_t config_combined_byte = this->combineBytes(
+        _payload[2],
+        _payload[3]
     );
 
     // Decode the uint16_t back into config and channels
@@ -113,7 +130,7 @@ void Rx::setData(
 }
 
 void Rx::setTXpayload(uint8_t* _payload) {
-    uint8_t current_position = 2;
+    uint8_t current_position = 4;
 
     for (int i = 3; i < 16; i++) {
         uint8_t channel = i - 2;
@@ -233,7 +250,7 @@ void Rx::updateTftRemoteTX() {
             this->_payload.data.j1y, _config.joystick_min, _config.joystick_max
         )
     );
-        
+
     _RIGHT_JOYSTICK_X.update(
         constrain(
             this->_payload.data.j2x, _config.joystick_min, _config.joystick_max
@@ -314,8 +331,18 @@ void Rx::readBatteryPercentage(float BATTERY_MIN, float BATTERY_MAX) {
      * Improve the ADC Reading
      * https://github.com/G6EJD/ESP32-ADC-Accuracy-Improvement-function/
      */
+    int num_readings = 30;
+    float smoothing_factor = 0.1;
 
-    float voltage_reading = analogRead(_config.VOLTAGE_MONITOR_PIN);
+    int filtered_reading = analogRead(_config.VOLTAGE_MONITOR_PIN);
+
+    for (int i = 1; i < num_readings; i++) {
+        int current_reading = analogRead(_config.VOLTAGE_MONITOR_PIN);
+        filtered_reading = (smoothing_factor * current_reading) + ((1 - smoothing_factor) * filtered_reading);
+    }
+
+    int voltage_reading = filtered_reading;
+
     float battery_voltage = -0.000000000009824 * pow(
         voltage_reading, 3
     ) + 0.000000016557283 * pow(

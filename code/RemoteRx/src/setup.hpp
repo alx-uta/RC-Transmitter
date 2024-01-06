@@ -1,7 +1,7 @@
 /**
  * RC Transmitter – ESP32 / SX1280
  * https://github.com/alx-uta/RC-Transmitter
- * 
+ *
  * Alex Uta
  * microknot.dev
  */
@@ -58,11 +58,6 @@ void SX1280_setup() {
         Serial.print("setCRC:");Serial.println(state);
     #endif
 
-    state = radio.setSyncWord(SX1280_SYNC_WORD, SX1280_SYNC_WORD_LEN);
-    #if ENABLE_RADIO_LIB_DEBUG
-        Serial.print("setSyncWord:");Serial.println(state);
-    #endif
-
     state = radio.setPreambleLength(SX1280_PREAMBLE_LENGTH);
     #if ENABLE_RADIO_LIB_DEBUG
         Serial.print("setSyncWord:");Serial.println(state);
@@ -107,7 +102,7 @@ void SX1280_setup() {
 void receiveData() {
     if(receivedFlag) {
       enableInterrupt = false;
-  
+
       // reset flag
       receivedFlag = false;
 
@@ -131,7 +126,7 @@ void receiveData() {
         #endif
 
         #if ENABLE_DEBUG
-            uint8_t current_position = 2;
+            uint8_t current_position = 4;
             bool data_received = false;
             for (int i = 3; i < 16; i++) {
                 uint8_t channel = i - 2;
@@ -166,7 +161,7 @@ void rxHopping() {
     if ((
         current_time - last_switch_time
     ) >= SX1280_HOPPING_INTERNAL_MILLIS and current_frequency!=SX1280_TX_FREQUENCY) {
-        
+
         // Move to the External TX Frequency
         current_frequency = SX1280_TX_FREQUENCY;
         radio.setFrequency(current_frequency);
@@ -178,7 +173,7 @@ void rxHopping() {
     if ((
         current_time - last_switch_time
     ) >= SX1280_TX_FREQUENCY_AVAILABILITY_MILLIS and current_frequency!=SX1280_FREQUENCY) {
-        
+
         // Move to the TX Frequency
         current_frequency = SX1280_FREQUENCY;
         radio.setFrequency(current_frequency);

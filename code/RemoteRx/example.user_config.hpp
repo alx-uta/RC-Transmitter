@@ -1,7 +1,7 @@
 /**
  * RC Transmitter – ESP32 / SX1280
  * https://github.com/alx-uta/RC-Transmitter
- * 
+ *
  * Alex Uta
  * microknot.dev
  */
@@ -48,12 +48,17 @@ int     SX1280_BIT_RATE                     = 250;
 int     SX1280_OUTPUT_POWER                 = 8; // -18 to 13 dBm
 int     SX1280_GAIN_CONTROL                 = 8; // 1 - 13
 uint8_t SX1280_DATA_SHAPING                 = RADIOLIB_SHAPING_0_5;
-uint8_t SX1280_SYNC_WORD[]                  = {0x01, 0x23, 0x45, 0x67};
-int     SX1280_SYNC_WORD_LEN                = 4;
 int     SX1280_CRC_VALUE                    = 1;
 int     SX1280_PREAMBLE_LENGTH              = 4;
 bool    SX1280_SET_HIGH_SENSITIVITY_MODE    = true;
 
 int SX1280_HOPPING_INTERNAL_MILLIS          = 3000;
 int SX1280_TX_FREQUENCY_AVAILABILITY_MILLIS = 5;
+
+// Binding Key
+bool BINDING_KEY[16] = {
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0
+};
+
 #endif  // USER_CONFIG_HPP

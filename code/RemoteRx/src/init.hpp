@@ -1,7 +1,7 @@
 /**
  * RC Transmitter – ESP32 / SX1280
  * https://github.com/alx-uta/RC-Transmitter
- * 
+ *
  * Alex Uta
  * microknot.dev
  */
@@ -10,7 +10,7 @@ Config _RX_CONFIG;
 
 /**
  * RadioLib Init
- * 
+ *
  * This is used to transmit the data
  */
 SX1280 radio = new Module(
@@ -143,14 +143,14 @@ RotaryEncoder _ENCODER_RIGHT(_RX_CONFIG, tft, 250, 155);
 Rx _RX(
     // Config
     _RX_CONFIG,
-    
+
     // TFT Screen
     tft,
-    
+
     // TX/RX Battery
     _TX_BATTERY,
     _RX_BATTERY,
-    
+
     // Left Rotary Encoder
     _DISPLAY_POSITION_LEFT,
     _ENCODER_LEFT,
@@ -162,11 +162,11 @@ Rx _RX(
     // Left Joystick
     _LEFT_JOYSTICK_X,
     _LEFT_JOYSTICK_Y,
-    
+
     // Right Joystick
     _RIGHT_JOYSTICK_X,
     _RIGHT_JOYSTICK_Y,
-    
+
     // Potentiometers
     _SLIDER_POT_1,
     _SLIDER_POT_2,
@@ -184,7 +184,7 @@ Rx _RX(
 );
 
 // Maximum payload size
-const int _payload_size = 18;
+const int _payload_size = 20;
 uint8_t _payload[_payload_size];
 
 /**

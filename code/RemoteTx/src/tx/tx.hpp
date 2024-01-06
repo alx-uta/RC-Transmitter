@@ -1,7 +1,7 @@
 /**
  * RC Transmitter – ESP32 / SX1280
  * https://github.com/alx-uta/RC-Transmitter
- * 
+ *
  * Alex Uta
  * microknot.dev
  */
@@ -31,7 +31,7 @@ public:
     void joysticks();
     void potentiometers();
     void readMCP23S17();
-    
+
     // Payload
     uint8_t* getPayload();
     int getPayloadSize();
@@ -63,7 +63,7 @@ public:
         uint8_t second_byte;
     };
 
-    uint8_t maximum_payload_size = 19;
+    uint8_t maximum_payload_size = 21;
 
     /**
      * CH1  : j1y - Left Joystick Up/Down
@@ -100,7 +100,7 @@ public:
      * TX0 : Remote TX
      * TX1 : Sensors 1
      * TX2 : Sensors 2
-     * 
+     *
      * CH1  : j1y - Left Joystick Up/Down
      * CH2  : j1x - Left Joystick Left/Right
      * CH3  : j2y - Right Joystick Up/Down
