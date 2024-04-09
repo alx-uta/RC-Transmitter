@@ -95,20 +95,13 @@ int
 */
 #define RADIOLIB_SHAPING_1_0                                    (0x04)
 
-
 float   SX1280_FREQUENCY            = 2410;
-int     SX1280_FREQUENCY_DEVIATION  = 200;
-int     SX1280_BIT_RATE             = 250;
+int     SX1280_BIT_RATE             = 260; // 260, 325, 520, 650, 1000 and 1300
+int     SX1280_CODING_RATE          = 2;
 int     SX1280_OUTPUT_POWER         = 8; // -18 to 13 dBm
 int     SX1280_GAIN_CONTROL         = 8; // 1 - 13
-uint8_t SX1280_DATA_SHAPING         = RADIOLIB_SHAPING_0_5;
-int     SX1280_CRC_VALUE            = 2;
-int     SX1280_PREAMBLE_LENGTH      = 4;
 
-// Binding Key
-bool BINDING_KEY[16] = {
-    0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0
-};
+uint8_t SX1280_DATA_SHAPING         = RADIOLIB_SHAPING_0_5;
+uint8_t SX1280_SYNC_WORD[]          = {0x01, 0x23, 0x45, 0x67};
 
 #endif  // USER_CONFIG_HPP

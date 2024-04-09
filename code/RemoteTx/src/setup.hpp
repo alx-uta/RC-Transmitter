@@ -66,10 +66,10 @@ void setFlag(void) {
 
 
 /**
- * SX1280
+ * SX1280 TX
  */
 void SX1280_setup() {
-    int state = radio.beginGFSK();
+    int state = radio.beginFLRC();
 
     #if ENABLE_SERIAL_PRINT
         #if ENABLE_RADIO_LIB_DEBUG
@@ -83,6 +83,21 @@ void SX1280_setup() {
         #endif
     #endif
 
+    state = radio.setFrequency(SX1280_FREQUENCY);
+    #if ENABLE_RADIO_LIB_DEBUG
+        Serial.print("setFrequency:");Serial.println(state);
+    #endif
+
+    state = radio.setBitRate(SX1280_BIT_RATE);
+    #if ENABLE_RADIO_LIB_DEBUG
+        Serial.print("setBitRate:");Serial.println(state);
+    #endif
+
+    state = radio.setCodingRate(SX1280_CODING_RATE);
+    #if ENABLE_RADIO_LIB_DEBUG
+        Serial.print("setCodingRate:");Serial.println(state);
+    #endif
+
     state = radio.setOutputPower(SX1280_OUTPUT_POWER);
     #if ENABLE_RADIO_LIB_DEBUG
         Serial.print("setOutputPower:");Serial.println(state);
@@ -93,34 +108,19 @@ void SX1280_setup() {
         Serial.print("setGainControl:");Serial.println(state);
     #endif
 
-    state = radio.setFrequency(SX1280_FREQUENCY);
-    #if ENABLE_RADIO_LIB_DEBUG
-        Serial.print("setFrequency:");Serial.println(state);
-    #endif
-
-    state = radio.setFrequencyDeviation(SX1280_FREQUENCY_DEVIATION);
-    #if ENABLE_RADIO_LIB_DEBUG
-        Serial.print("setFrequencyDeviation:");Serial.println(state);
-    #endif
-
-    state = radio.setBitRate(SX1280_BIT_RATE);
-    #if ENABLE_RADIO_LIB_DEBUG
-        Serial.print("setBitRate:");Serial.println(state);
-    #endif
-
     state = radio.setDataShaping(SX1280_DATA_SHAPING);
     #if ENABLE_RADIO_LIB_DEBUG
         Serial.print("setDataShaping:");Serial.println(state);
     #endif
 
-    state = radio.setCRC(SX1280_CRC_VALUE);
+    state = radio.setCRC(2, 0x1D0F, 0x1021);
     #if ENABLE_RADIO_LIB_DEBUG
         Serial.print("setCRC:");Serial.println(state);
     #endif
 
-    state = radio.setPreambleLength(SX1280_PREAMBLE_LENGTH);
+    state = radio.setSyncWord(SX1280_SYNC_WORD, 4);
     #if ENABLE_RADIO_LIB_DEBUG
-        Serial.print("setPreambleLength:");Serial.println(state);
+        Serial.print("setSyncWord:");Serial.println(state);
     #endif
 
     #if ENABLE_SERIAL_PRINT
@@ -138,7 +138,8 @@ void SX1280_setup() {
     /**
      * Start the connexion and transmit the first package
      */
-    uint8_t* payload_data = (uint8_t*)malloc(2);
+    uint8_t* payload_data = _TX.getPayload();
+    int payload_size = _TX.getPayloadSize();
 
     // Add the current config to the payload
     uint16_t config_encode = _TX.encodeStatusToByte(
@@ -149,10 +150,11 @@ void SX1280_setup() {
     payload_data[1] = (config_encode >> 8);
 
     transmissionState = radio.startTransmit(
-        payload_data, 2
+        payload_data, payload_size
     );
     free(payload_data);
 }
+
 
 /**
  * SX1280 Data Transmit

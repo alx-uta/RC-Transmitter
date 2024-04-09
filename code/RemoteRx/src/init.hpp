@@ -184,7 +184,7 @@ Rx _RX(
 );
 
 // Maximum payload size
-const int _payload_size = 20;
+const int _payload_size = 19;
 uint8_t _payload[_payload_size];
 
 /**

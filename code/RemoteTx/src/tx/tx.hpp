@@ -63,7 +63,7 @@ public:
         uint8_t second_byte;
     };
 
-    uint8_t maximum_payload_size = 21;
+    uint8_t maximum_payload_size = 19;
 
     /**
      * CH1  : j1y - Left Joystick Up/Down

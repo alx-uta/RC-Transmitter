@@ -43,22 +43,17 @@ float BATTERY_MAX = 2.1; // 4.2 / 2 = 4.2v, with a max of 4.2V
 // This needs to be the same as the Remote TX
 float   SX1280_FREQUENCY                    = 2410; // Remote TX
 float   SX1280_TX_FREQUENCY                 = 2420; // External TX
-int     SX1280_FREQUENCY_DEVIATION          = 200;
-int     SX1280_BIT_RATE                     = 250;
+int     SX1280_BIT_RATE                     = 260; // 260, 325, 520, 650, 1000 and 1300
+int     SX1280_CODING_RATE                  = 2;
 int     SX1280_OUTPUT_POWER                 = 8; // -18 to 13 dBm
 int     SX1280_GAIN_CONTROL                 = 8; // 1 - 13
 uint8_t SX1280_DATA_SHAPING                 = RADIOLIB_SHAPING_0_5;
-int     SX1280_CRC_VALUE                    = 1;
-int     SX1280_PREAMBLE_LENGTH              = 4;
 bool    SX1280_SET_HIGH_SENSITIVITY_MODE    = true;
 
 int SX1280_HOPPING_INTERNAL_MILLIS          = 3000;
 int SX1280_TX_FREQUENCY_AVAILABILITY_MILLIS = 5;
 
-// Binding Key
-bool BINDING_KEY[16] = {
-    0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0
-};
+uint8_t SX1280_SYNC_WORD[]          = {0x01, 0x23, 0x45, 0x67};
+
 
 #endif  // USER_CONFIG_HPP

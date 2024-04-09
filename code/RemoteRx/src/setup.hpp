@@ -7,10 +7,10 @@
  */
 
 /**
- * SX1280
+ * SX1280 RX
  */
 void SX1280_setup() {
-    int state = radio.beginGFSK();
+    int state = radio.beginFLRC();
     #if ENABLE_SERIAL_PRINT
         #if ENABLE_RADIO_LIB_DEBUG
             if (state == RADIOLIB_ERR_NONE) {
@@ -23,6 +23,21 @@ void SX1280_setup() {
         #endif
     #endif
 
+    state = radio.setFrequency(SX1280_FREQUENCY);
+    #if ENABLE_RADIO_LIB_DEBUG
+        Serial.print("setFrequency:");Serial.println(state);
+    #endif
+
+    state = radio.setBitRate(SX1280_BIT_RATE);
+    #if ENABLE_RADIO_LIB_DEBUG
+        Serial.print("setBitRate:");Serial.println(state);
+    #endif
+
+    state = radio.setCodingRate(SX1280_CODING_RATE);
+    #if ENABLE_RADIO_LIB_DEBUG
+        Serial.print("setCodingRate:");Serial.println(state);
+    #endif
+
     state = radio.setOutputPower(SX1280_OUTPUT_POWER);
     #if ENABLE_RADIO_LIB_DEBUG
         Serial.print("setOutputPower:");Serial.println(state);
@@ -33,32 +48,17 @@ void SX1280_setup() {
         Serial.print("setGainControl:");Serial.println(state);
     #endif
 
-    state = radio.setFrequency(SX1280_FREQUENCY);
-    #if ENABLE_RADIO_LIB_DEBUG
-        Serial.print("setFrequency:");Serial.println(state);
-    #endif
-
-    state = radio.setFrequencyDeviation(SX1280_FREQUENCY_DEVIATION);
-    #if ENABLE_RADIO_LIB_DEBUG
-        Serial.print("setFrequencyDeviation:");Serial.println(state);
-    #endif
-
-    state = radio.setBitRate(SX1280_BIT_RATE);
-    #if ENABLE_RADIO_LIB_DEBUG
-        Serial.print("setBitRate:");Serial.println(state);
-    #endif
-
     state = radio.setDataShaping(SX1280_DATA_SHAPING);
     #if ENABLE_RADIO_LIB_DEBUG
         Serial.print("setDataShaping:");Serial.println(state);
     #endif
 
-    state = radio.setCRC(SX1280_CRC_VALUE);
+    state = radio.setCRC(2, 0x1D0F, 0x1021);
     #if ENABLE_RADIO_LIB_DEBUG
         Serial.print("setCRC:");Serial.println(state);
     #endif
 
-    state = radio.setPreambleLength(SX1280_PREAMBLE_LENGTH);
+    state = radio.setSyncWord(SX1280_SYNC_WORD, 4);
     #if ENABLE_RADIO_LIB_DEBUG
         Serial.print("setSyncWord:");Serial.println(state);
     #endif
@@ -126,7 +126,7 @@ void receiveData() {
         #endif
 
         #if ENABLE_DEBUG
-            uint8_t current_position = 4;
+            uint8_t current_position = 2;
             bool data_received = false;
             for (int i = 3; i < 16; i++) {
                 uint8_t channel = i - 2;

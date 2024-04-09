@@ -7,32 +7,27 @@
  */
 
 #include "tx.hpp"
-extern bool BINDING_KEY[16];
 
 void Tx::setLeftJoystick(uint8_t x, uint8_t y) {
-    // Enable or disable this channel
-    payload_config[3] = (x == joystick_default_value) ? 0 : 1;
-    if (payload_config[3]) {
+    this->payload_config[3] = 1;
+    if (this->payload_config[3]) {
         this->channels[0].first_byte = x;
     }
 
-    // Enable or disable this channel
-    payload_config[4] = (y == joystick_default_value) ? 0 : 1;
-    if (payload_config[4]) {
+    this->payload_config[4] = 1;
+    if (this->payload_config[4]) {
         this->channels[1].first_byte = y;
     }
 }
 
 void Tx::setRightJoystick(uint8_t x, uint8_t y) {
-    // Enable or disable this channel
-    payload_config[5] = (x == joystick_default_value) ? 0 : 1;
-    if(payload_config[5]) {
+    this->payload_config[5] = 1;
+    if(this->payload_config[5]) {
         this->channels[2].first_byte = x;
     }
 
-    // Enable or disable this channel
-    payload_config[6] = (y == joystick_default_value) ? 0 : 1;
-    if(payload_config[6]) {
+    this->payload_config[6] = 1;
+    if(this->payload_config[6]) {
         this->channels[3].first_byte = y;
     }
 }
@@ -43,9 +38,9 @@ void Tx::setPotentiometers(uint8_t p1, uint8_t p2, uint8_t p3, uint8_t p4, uint8
 
     for (int i = 0; i < 6; i++) {
         // Update the payload_config and channels
-        payload_config[payload_config_offset + i] = (p_values[i] == 0) ? 0 : 1;
+        this->payload_config[payload_config_offset + i] = (p_values[i] == 0) ? 0 : 1;
 
-        if (payload_config[payload_config_offset + i]) {
+        if (this->payload_config[payload_config_offset + i]) {
             this->channels[7 + i].first_byte = p_values[i];
         }
     }
@@ -79,8 +74,8 @@ void Tx::setSwitchesPushButtons(uint16_t pin_state_encoders, uint16_t pin_state_
     this->switches_state = this->encodeStatusToByte(switchStatuses, 15);
 
     // Enable or disable this channel
-    payload_config[7] = (0 == this->switches_state) ? 0 : 1;
-    if(payload_config[7]) {
+    this->payload_config[7] = (0 == this->switches_state) ? 0 : 1;
+    if(this->payload_config[7]) {
         // Update the channel for the switches
         // Extract the lower and upper bytes
         this->channels[4].first_byte = (this->switches_state & 0xFF);
@@ -91,8 +86,8 @@ void Tx::setSwitchesPushButtons(uint16_t pin_state_encoders, uint16_t pin_state_
 
 void Tx::setAnoRotaryEncoderLeftPosition(uint8_t byte_1, uint8_t byte_2) {
     // Enable or disable this channel
-    payload_config[8] = ((0 == byte_1) and (0 == byte_2)) ? 0 : 1;
-    if(payload_config[8]) {
+    this->payload_config[8] = ((0 == byte_1) and (0 == byte_2)) ? 0 : 1;
+    if(this->payload_config[8]) {
         this->channels[5].first_byte = byte_1;
         this->channels[5].second_byte = byte_2;
     }
@@ -100,8 +95,8 @@ void Tx::setAnoRotaryEncoderLeftPosition(uint8_t byte_1, uint8_t byte_2) {
 
 void Tx::setAnoRotaryEncoderRightPosition(uint8_t byte_1, uint8_t byte_2) {
     // Enable or disable this channel
-    payload_config[9] = ((0 == byte_1) and (0 == byte_2)) ? 0 : 1;
-    if(payload_config[9]) {
+    this->payload_config[9] = ((0 == byte_1) and (0 == byte_2)) ? 0 : 1;
+    if(this->payload_config[9]) {
         this->channels[6].first_byte = byte_1;
         this->channels[6].second_byte = byte_2;
     }
@@ -117,9 +112,9 @@ int16_t Tx::getAnoRotaryEncoderPosition(
 int Tx::getPayloadSize() {
     // We have 2 bytes from the config
     // and 2 more from the binding key
-    this->payload_size = 4;
+    this->payload_size = 2;
     for (int i = 3; i < 16; i++) {
-        if (payload_config[i]) {
+        if (this->payload_config[i]) {
             this->increasePayloadSize(this->channels[i - 3].required_bytes);
         }
     }
@@ -138,11 +133,6 @@ uint8_t* Tx::getPayload() {
     }
 
     uint8_t current_position = 0;
-
-    // Add the binding key to the payload
-    uint16_t binding_key_encode = this->encodeStatusToByte(BINDING_KEY, 16);
-    payload_data[current_position++] = (binding_key_encode & 0xFF);
-    payload_data[current_position++] = (binding_key_encode >> 8);
 
     // Add the current config to the payload
     uint16_t config_encode = this->encodeStatusToByte(this->payload_config, 16);
